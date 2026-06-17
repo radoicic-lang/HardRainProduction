@@ -1,0 +1,6 @@
+{
+  "name": "Hard Rain Production Studio Portal",
+  "description": "Stories that move people, from the screen to the soul. A prestigious, human-centric production studio embodying high-end craftsmanship, emotive documentary grit, and deep narrative arcs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
