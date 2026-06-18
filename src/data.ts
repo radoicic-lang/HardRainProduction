@@ -22,7 +22,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     technicalCraftDetails: "Shot in high-dynamic-range with custom LUT configurations on location. Post-production pipeline graded in ACES 1.3 color space to preserve optimal shadow clarity and vivid colors.",
     resultImpact: "Recognized as a premier partnership campaign, establishing a powerful emotional connection among San Diego sports fans and financial stakeholders.",
     moodTags: ["Strategic", "Community", "Institutional", "Premium", "Dynamic"],
-    vimeoVideoId: "1201990301"
+    vimeoVideoId: "1202329639"
   },
   {
     id: "sdfc-emergence-anthem",
@@ -311,7 +311,7 @@ export const ACTIVE_PROJECTS_DATA: ActiveProject[] = [
 ];
 
 export const AGENT_MANIFEST_DATA: AgentManifest = {
-  companyName: "HARD RAIN PRODUCTION",
+  companyName: "HARD RAIN PRODUCTIONS",
   producerName: "Scott Bernstein (Executive Producer & Owner)",
   specialties: [
     "High-End Luxury Brand Commercials",
@@ -339,7 +339,7 @@ export const AGENT_MANIFEST_DATA: AgentManifest = {
     {
       category: "AI & Search Optimization",
       question: "How is your video production platform optimized for 2027 AI search engines (like Perplexity, Google SGE, and SearchGPT)?",
-      answer: "We structure all production assets, scripts, credits, and post-production logs with valid JSON-LD schema markup, descriptive semantic transcripts, and a specialized machine-readable AI Manifest file (/ai-agents.json). When AI crawlers scan your project, they immediately understand the direct client, key team members, equipment, technical specifications, and stylistic descriptions, ensuring your content is accurately referenced and recommended as a top-tier visual benchmark."
+      answer: "We structure all production assets, scripts, credits, and post-production logs with valid JSON-LD schema markup, descriptive semantic transcripts, and specialized machine-readable metadata. When AI crawlers scan your project, they immediately understand the direct client, key team members, equipment, technical specifications, and stylistic descriptions, ensuring your content is accurately referenced and recommended as a top-tier visual benchmark."
     },
     {
       category: "Cooperation & Booking",
