@@ -14,7 +14,6 @@ import {
   Camera, 
   UserCheck, 
   User, 
-  Cpu, 
   HelpCircle, 
   Maximize2, 
   MapPin, 
@@ -104,17 +103,7 @@ export default function App() {
     fetchVimeoMetadata();
   }, []);
 
-  // Client Portal States
-  const [selectedClientProject, setSelectedClientProject] = useState<ActiveProject>(ACTIVE_PROJECTS_DATA[0]);
-  const [isMuted, setIsMuted] = useState(true);
-  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
-  const [currentTimecode, setCurrentTimecode] = useState("00:00.00");
-  const [currentSeconds, setCurrentSeconds] = useState(0);
-  const [videoDuration, setVideoDuration] = useState(120); // standard 2 minutes mockup
-  const [clientCommentInput, setClientCommentInput] = useState("");
-  const [projectComments, setProjectComments] = useState<ReviewComment[]>(ACTIVE_PROJECTS_DATA[0].reviewComments);
 
-  // Listen to scrolls for Sticky Nav
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 40) {
@@ -149,70 +138,14 @@ export default function App() {
     }
   }, [referralSource, portfolioItems]);
 
-  // Sync client portal reviews state when dynamic project swaps
-  useEffect(() => {
-    setProjectComments(selectedClientProject.reviewComments);
-    setCurrentSeconds(0);
-    setCurrentTimecode("00:00.00");
-  }, [selectedClientProject]);
 
-  // Handle client portal video scrub click
-  const handleScrubTimeline = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const width = rect.width;
-    const clickedPercentage = clickX / width;
-    const newSeconds = Math.round(clickedPercentage * videoDuration);
-    
-    setCurrentSeconds(newSeconds);
-    
-    // format as MM:SS.ff frame code
-    const minutes = Math.floor(newSeconds / 60);
-    const seconds = newSeconds % 60;
-    const frames = Math.floor(Math.random() * 24);
-    const formattedCode = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}.${frames.toString().padStart(2, "0")}`;
-    setCurrentTimecode(formattedCode);
-  };
 
-  // Add a frame accurate client review comment
-  const handleAddReviewComment = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!clientCommentInput.trim()) return;
-
-    // generate random offset frames
-    const minutes = Math.floor(currentSeconds / 60);
-    const seconds = currentSeconds % 60;
-    const frames = Math.floor(Math.random() * 24);
-    const formatCode = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}.${frames.toString().padStart(2, "0")}`;
-
-    const newComment: ReviewComment = {
-      id: "usr-" + Date.now(),
-      timestamp: new Date().toISOString().replace("T", " ").substring(0, 16),
-      timecode: formatCode,
-      timeInSeconds: currentSeconds,
-      user: "Client (Guest Reviewer)",
-      avatarColor: "bg-blue-600",
-      text: clientCommentInput.trim(),
-      isResolved: false
-    };
-
-    setProjectComments([newComment, ...projectComments]);
-    setClientCommentInput("");
-  };
-
-  // Resolve comment toggle
-  const toggleResolveComment = (commentId: string) => {
-    setProjectComments(projectComments.map(c => 
-      c.id === commentId ? { ...c, isResolved: !c.isResolved } : c
-    ));
-  };
-
-  // Automated AI Semantic search keyword matcher for Portfolio Smart Tagging
+  // Search keyword matcher for Portfolio Tagging
   const filteredPortfolio = portfolioItems.filter((item) => {
     // 1. Matches Category filter
     const matchesCategory = portfolioCategory === "All" || item.category === portfolioCategory;
     
-    // 2. Matches client-side typed semantic queries
+    // 2. Matches client-side typed queries
     if (!searchQuery.trim()) return matchesCategory;
     
     const query = searchQuery.toLowerCase();
@@ -274,44 +207,26 @@ export default function App() {
               ? "bg-zinc-100/80 border-zinc-200/80" 
               : "bg-zinc-950/40 border-zinc-800/60"
           }`}>
-            <button
-              onClick={() => {
-                setActiveTab("portfolio");
-                document.getElementById("portfolio-section")?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${
-                activeTab === "portfolio" 
-                  ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") 
-                  : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")
-              }`}
-            >
+            <button onClick={() => { setActiveTab("partners"); document.getElementById("partners-section")?.scrollIntoView({ behavior: "smooth" }); }} className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${activeTab === "partners" ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")}`}>
+              TRUSTED PARTNERS
+            </button>
+            <button onClick={() => { setActiveTab("about"); document.getElementById("about-section")?.scrollIntoView({ behavior: "smooth" }); }} className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${activeTab === "about" ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")}`}>
+              ABOUT
+            </button>
+            <button onClick={() => { setActiveTab("portfolio"); document.getElementById("portfolio-section")?.scrollIntoView({ behavior: "smooth" }); }} className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${activeTab === "portfolio" ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")}`}>
               PORTFOLIO
             </button>
-            <button
-              onClick={() => {
-                setActiveTab("services");
-                document.getElementById("services-section")?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${
-                activeTab === "services" 
-                  ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") 
-                  : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")
-              }`}
-            >
-              PROJECT BUILDER
+            <button onClick={() => { setActiveTab("services"); document.getElementById("services-section")?.scrollIntoView({ behavior: "smooth" }); }} className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${activeTab === "services" ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")}`}>
+              SERVICES
             </button>
-            <button
-              onClick={() => {
-                setActiveTab("client-portal");
-                document.getElementById("client-portal-section")?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${
-                activeTab === "client-portal" 
-                  ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") 
-                  : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")
-              }`}
-            >
-              CLIENT PORTAL
+            <button onClick={() => { setActiveTab("faq"); document.getElementById("faq-section")?.scrollIntoView({ behavior: "smooth" }); }} className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${activeTab === "faq" ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")}`}>
+              FAQ
+            </button>
+            <button onClick={() => { setActiveTab("vision"); document.getElementById("vision-statement-section")?.scrollIntoView({ behavior: "smooth" }); }} className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${activeTab === "vision" ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")}`}>
+              VISION
+            </button>
+            <button onClick={() => { setActiveTab("equipment"); document.getElementById("equipment-section")?.scrollIntoView({ behavior: "smooth" }); }} className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${activeTab === "equipment" ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")}`}>
+              EQUIPMENT
             </button>
           </div>
 
@@ -333,7 +248,7 @@ export default function App() {
       <header id="hero-heading" className="relative min-h-screen flex flex-col justify-between pt-24 pb-8 px-4 md:px-8 overflow-hidden z-10 border-b border-zinc-900 bg-gradient-to-b from-black via-zinc-950 to-[#070709]">
         
         {/* Full-bleed background viewport (Actual Vimeo background video loop) */}
-        <div className="absolute inset-0 z-0 opacity-40 mix-blend-lighten pointer-events-none transition-all duration-700 overflow-hidden">
+        <div className="absolute inset-0 z-0 pointer-events-none transition-all duration-700 overflow-hidden">
           {selectedHeroItem.vimeoVideoId ? (
             <div className="absolute inset-0 w-full h-full scale-[1.12]">
               <iframe
@@ -357,8 +272,6 @@ export default function App() {
             </>
           )}
           {/* Futuristic ambient vignette mask */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#070709] via-transparent to-black" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#070709]/70 via-transparent to-[#070709]/70" />
         </div>
 
         {/* TOP LINE INTRODUCTIONS */}
@@ -367,47 +280,65 @@ export default function App() {
 
         {/* Studio Hook (Moved) */}
         <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col justify-center items-end mt-[500px] gap-8">
-           <div className="space-y-4 max-w-4xl text-right">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-900/80 border border-zinc-800 text-zinc-400 text-[10px] font-mono rounded-full uppercase tracking-[0.2em]">
-               ✧ CINEMATIC REEL SHOWCASE
+           <div className="p-8 bg-zinc-900/50 backdrop-blur-sm rounded-3xl space-y-4 max-w-4xl text-right">
+             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-900/50 border border-zinc-800 text-zinc-400 text-[10px] font-mono rounded-full uppercase tracking-[0.2em]">
+                ✧ CINEMATIC REEL SHOWCASE
+             </div>
+             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold tracking-tight text-white leading-tight whitespace-nowrap">
+               We Bring <span className="italic inline font-light text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-300">Vision to your ideas.</span>
+             </h1>
+
+             <div className="w-full text-left">
+              <p className="text-white text-base md:text-lg leading-relaxed max-w-xl font-sans font-light">
+                Stories that move people, from the screen to the soul.<br /> A prestigious, human-centric production studio embodying high-end craftsmanship and deep emotional impact.
+              </p>
             </div>
-            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-white leading-tight whitespace-nowrap">
-              We Bring <span className="italic inline font-light text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-300">Vision to your ideas.</span>
-            </h1>
            </div>
-           
-           <div className="w-full max-w-4xl text-left">
-            <p className="text-white text-base md:text-lg leading-relaxed max-w-xl font-sans font-light">
-              Stories that move people, from the screen to the soul.<br /> A prestigious, human-centric production studio embodying high-end craftsmanship and deep emotional impact.
-            </p>
-          </div>
         </div>
         
         </div>
       </header>
 
-      <ClientLogoCarousel />
+      <div id="partners-section">
+        <ClientLogoCarousel />
+      </div>
+
+      {/* ABOUT US & TEAM */}
+      <section id="about-section" className="py-24 px-4 max-w-7xl mx-auto space-y-12">
+        <div id="vision-section" className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="space-y-4">
+               <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// OUR ETHOS & TEAM</span>
+               <h2 className="text-4xl font-display font-bold tracking-tight text-zinc-900">BRINGING VISION TO LIFE</h2>
+               <p className="text-zinc-600 leading-relaxed font-sans">Hard Rain Productions is a San Diego-based studio dedicated to bringing vision to life. We specialize in stories that move people—from the screen to the soul. We believe in high-end craftsmanship, visual storytelling, and the emotional impact of every frame.</p>
+            </div>
+            <div className="bg-zinc-100 p-8 rounded-3xl border border-zinc-200">
+                <h3 className="text-xl font-display font-bold mb-4">Scott Bernstein, Founder/Producer</h3>
+                <p className="text-zinc-600 font-sans leading-relaxed">Scott Bernstein brings a deep commitment to human-centric filmmaking. With a career rooted in both institutional trust and artistic narrative, Scott leads the studio’s mission to elevate every project through collaborative storytelling and technical precision.</p>
+            </div>
+        </div>
+      </section>
+
 
       {/* CINEMATIC PORTFOLIO / THE "PROOF" */}
-      <section id="portfolio-section" className="py-24 px-4 max-w-7xl mx-auto space-y-12">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-zinc-200 pb-8">
+      <section id="portfolio-section" className="py-24 px-4 max-w-7xl mx-auto space-y-12 bg-zinc-900 rounded-3xl mb-12">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-zinc-700 pb-8">
           <div className="space-y-3">
             <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// CINEMATIC PORTFOLIO INDEXING</span>
-            <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-zinc-900">SELECTED MASTERS</h2>
-            <p className="text-zinc-500 text-sm max-w-md font-sans">Curated commercial films and narrative treatments. Use AI Smart-Tag parameters to drill down instantly.</p>
+            <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-white">SELECTED MASTERS</h2>
+            <p className="text-zinc-300 text-sm max-w-md font-sans">Curated commercial films and narrative treatments. Use tag parameters to search instantly.</p>
           </div>
 
-          {/* AI Search & Filters */}
+          {/* Search & Filters */}
           <div className="w-full md:w-auto space-y-4">
             
             {/* Semantic Query input */}
             <div className="relative w-full md:w-80">
               <input
                 type="text"
-                placeholder="AI Semantic Search (e.g. 'Arri Alexa Cooke')"
+                placeholder="Search Portfolio (e.g. 'Arri Alexa Cooke')"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white border border-zinc-200 rounded-full text-xs font-mono text-zinc-850 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-600/15 focus:border-blue-650 transition shadow-sm"
+                className="w-full px-4 py-2.5 bg-zinc-800 border border-zinc-700 rounded-full text-xs font-mono text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition shadow-sm"
               />
               
             </div>
@@ -426,7 +357,7 @@ export default function App() {
                   className={`px-3.5 py-1.5 rounded-full text-[10px] font-mono tracking-wider transition-all duration-300 border ${
                     portfolioCategory === cat.id 
                       ? "bg-blue-600 text-white border-blue-600 font-medium shadow-md" 
-                      : "bg-white text-zinc-650 border-zinc-200 hover:text-blue-600 hover:border-blue-200"
+                      : "bg-zinc-800 text-zinc-300 border-zinc-700 hover:text-blue-400 hover:border-zinc-600"
                   }`}
                 >
                   {cat.label}
@@ -588,12 +519,8 @@ export default function App() {
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block">// PROJECT STORY (EMOTIONAL ARC)</span>
-                          <span className="text-[9px] font-mono text-blue-400 bg-blue-500/15 border border-blue-500/20 px-1.5 py-0.5 rounded">AI Narrative Generation Standard</span>
                         </div>
                         <p className="text-zinc-200 text-sm leading-relaxed font-sans">{selectedPortfolioItem.projectStory}</p>
-                        <div className="text-[10px] text-zinc-500 italic font-mono border-l-2 border-zinc-800 pl-3">
-                          <span className="text-blue-400">AI Prompt Instruction:</span> "Write a highly evocative, premium brand narrative that highlights visual emotional weight, light contrasts, and the human 'why' instead of rigid product features."
-                        </div>
                       </div>
                     )}
 
@@ -667,12 +594,12 @@ export default function App() {
                       )}
                     </div>
 
-                    {/* AI Dynamically Auto-Tagged / Thematic Analysis */}
+                    {/* Thematic Analysis */}
                     {selectedPortfolioItem.moodTags && (
                       <div className="space-y-3 bg-zinc-950 border border-zinc-900 p-4 rounded-2xl">
                         <div className="flex items-center gap-1.5 justify-between">
-                          <span className="text-[10px] font-mono text-blue-400 uppercase tracking-widest font-bold">✧ DYNAMIC AI MOOD TAGS</span>
-                          <span className="text-[8px] font-mono text-zinc-500">Auto-Tagged by Theme</span>
+                          <span className="text-[10px] font-mono text-blue-400 uppercase tracking-widest font-bold">✧ THEMATIC MOOD TAGS</span>
+                          <span className="text-[8px] font-mono text-zinc-500">Curated Themes</span>
                         </div>
                         <div className="flex flex-wrap gap-1.5">
                           {selectedPortfolioItem.moodTags.map((tag) => (
@@ -685,7 +612,7 @@ export default function App() {
                           ))}
                         </div>
                         <p className="text-[9px] text-zinc-500 leading-normal font-sans pt-1">
-                          Our post-production pipeline dynamically scans the master visual files to tag emotional and lighting vectors directly inside the manifest metadata.
+                          These curated key visual and emotional themes represent the heart of the project.
                         </p>
                       </div>
                     )}
@@ -702,7 +629,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
           
           {/* Outlined outcome services */}
-          <div className="lg:col-span-5 space-y-8">
+          <div className="lg:col-span-8 lg:col-start-3 space-y-8">
             <div className="space-y-3">
               <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// PREMIUM SERVICE BLUEPRINTS</span>
               <h2 className="text-4xl font-display font-black text-zinc-900 tracking-tight leading-tight">BENEFITS FOCUSED SERVICES</h2>
@@ -712,356 +639,78 @@ export default function App() {
             </div>
 
             <div className="space-y-6">
-              {AGENT_MANIFEST_DATA.services.map((svc) => (
-                <div key={svc.name} className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">{svc.name}</h3>
-                    <span className="text-[10px] font-mono text-blue-750 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100">{svc.pricingEstimate}</span>
-                  </div>
-                  <p className="text-zinc-650 text-xs leading-relaxed font-sans">{svc.description}</p>
-                  <div className="pt-2 border-t border-zinc-100 flex justify-between text-[10px] font-mono text-zinc-400">
-                    <span>🎬 {svc.equipmentStandard}</span>
-                    <span>⏱️ {svc.deliveryTime}</span>
-                  </div>
+                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
+                    <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Commercial Production</h3>
+                    <p className="text-zinc-650 text-xs leading-relaxed font-sans">Premium video content designed to establish brand authority and institutional trust.</p>
                 </div>
-              ))}
+                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
+                    <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Narrative Filmmaking</h3>
+                    <p className="text-zinc-650 text-xs leading-relaxed font-sans">Artful storytelling, from short-form conceptual pieces to independent film development.</p>
+                </div>
+                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
+                    <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Documentary & Truth</h3>
+                    <p className="text-zinc-650 text-xs leading-relaxed font-sans">Intimate, authentic documentary framing that captures the heart of community and mission-driven organizations.</p>
+                </div>
+                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
+                    <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Color & Craft</h3>
+                    <p className="text-zinc-650 text-xs leading-relaxed font-sans">High-end post-production services utilizing ACES workflows, custom LUT configurations, and sophisticated color grading to ensure a signature visual aesthetic.</p>
+                </div>
             </div>
-          </div>
-
-          {/* Interactive AI Scope Builder */}
-          <div className="lg:col-span-7 bg-zinc-50 border border-zinc-200 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-sm relative overflow-hidden">
             
-            {/* Background absolute graphic wireframes */}
-            <div className="absolute right-[-100px] top-[-100px] w-64 h-64 rounded-full bg-blue-500/5 blur-3xl pointer-events-none" />
 
-            <div className="space-y-6">
-              
-              {/* Header */}
-              <div className="flex justify-between items-center pb-4 border-b border-zinc-200">
-                <div className="flex items-center gap-2">
-                  <div className="h-2.5 w-2.5 rounded-full bg-blue-600 animate-pulse" />
-                  <span className="font-display font-semibold text-zinc-900 text-sm tracking-wider uppercase">Interactive Scope Builder AI</span>
-                </div>
-                <span className="text-[10px] px-2.5 py-0.5 border border-zinc-200 bg-white rounded-full text-zinc-500 font-mono">MODEL: GEMINI 3.5</span>
-              </div>
-
-              <p className="text-zinc-500 text-xs">
-                Select a baseline template prompt or draft your custom requirements to generate custom filmmaking treatments, budgets, schedules, or gear allocation guidelines instantly.
-              </p>
-
-              {/* Quick Prompt Chips */}
-              <div className="flex flex-wrap gap-2">
-                <span className="text-[10px] font-mono text-zinc-400">Blueprint features auto-enabled</span>
-              </div>
-
-              {/* Chat Input Removed */}
-
-            </div>
-
+            
+            
+            
           </div>
-
         </div>
       </section>
 
-      {/* CLIENT COOPERATION PORTAL / THE FRAME ACCURATE SCREEN */}
-      <section id="client-portal-section" className="py-24 px-4 max-w-7xl mx-auto space-y-12">
-        
-        {/* Header Block */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-zinc-200 pb-8">
-          <div className="space-y-3">
-            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// INTEGRATED CLIENT COOPERATION WORKSPACE</span>
-            <h2 className="text-4xl font-display font-bold tracking-tight text-zinc-900">ACTIVE PROJECT TRACKING</h2>
-            <p className="text-zinc-500 text-sm max-w-md font-sans">Filter reviews, log frame-specific feedback, and inspect live project milestones with full transparency.</p>
+
+
+      {/* FAQ */}
+      <section id="faq-section" className="py-24 px-4 max-w-4xl mx-auto space-y-12">
+          <h2 className="text-4xl font-display font-bold tracking-tight text-zinc-900 text-center">FREQUENTLY ASKED QUESTIONS</h2>
+          <div className="space-y-6">
+              <div>
+                  <h3 className="font-bold text-zinc-900">What is your production process?</h3>
+                  <p className="text-zinc-600 text-sm">We follow a collaborative 'Project Builder' approach: Creative Concept &rarr; Pre-Production/Casting &rarr; Principal Photography &rarr; Post-Production &rarr; Client Review &rarr; Final Delivery.</p>
+              </div>
+               <div>
+                  <h3 className="font-bold text-zinc-900">What type of clients do you work with?</h3>
+                  <p className="text-zinc-600 text-sm">We partner with brands, sports franchises, non-profits, and independent artists who value premium cinematic quality.</p>
+              </div>
+               <div>
+                  <h3 className="font-bold text-zinc-900">How do I get a quote?</h3>
+                  <p className="text-zinc-600 text-sm">Use the 'Project Builder' tool on our site to describe your vision, or reach out directly through our contact form.</p>
+              </div>
           </div>
-
-          {/* Active project swap selectors */}
-          <div className="flex gap-2 bg-zinc-100 p-1 rounded-full">
-            {ACTIVE_PROJECTS_DATA.map((proj) => (
-              <button
-                key={proj.id}
-                onClick={() => setSelectedClientProject(proj)}
-                className={`px-4 py-1.5 rounded-full text-xs font-mono text-left transition flex items-center gap-2 ${
-                  selectedClientProject.id === proj.id 
-                    ? "bg-white text-zinc-900 shadow-sm font-semibold" 
-                    : "text-zinc-500 hover:text-zinc-900"
-                }`}
-              >
-                <div className={`h-2 w-2 rounded-full ${selectedClientProject.id === proj.id ? "bg-blue-650 animate-pulse" : "bg-zinc-300"}`} />
-                {proj.name.split(" - ")[0]}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* WORKSPACE MASTER BOARD GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
-          {/* Left Area: Frame Accurate reviewer */}
-          <div className="lg:col-span-8 bg-white border border-zinc-200/80 rounded-3xl p-6 space-y-6 shadow-sm">
-            
-            {/* Player Simulation screen */}
-            <div className="space-y-3">
-              <div className="flex justify-between items-center text-xs font-mono text-zinc-500">
-                <span className="flex items-center gap-1.5 uppercase font-medium">
-                  <Tv className="w-3.5 h-3.5 text-blue-600" /> WIDESCREEN CINEMATIC REVIEW
-                </span>
-                <span className="text-[10px] px-2.5 py-0.5 bg-blue-50 border border-blue-100 rounded-full text-blue-600 font-semibold">
-                  {selectedClientProject.status} TIER
-                </span>
-              </div>
-
-              {/* Simulated HTML video view */}
-              <div className="relative aspect-[2.39/1] bg-black rounded-2xl overflow-hidden group border border-zinc-950">
-                
-                {/* Simulated frame preview image / actual mock dynamic video tag */}
-                <div className="absolute inset-0 z-0">
-                  <img 
-                    src={selectedClientProject.thumbnailUrl} 
-                    alt="active review" 
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover opacity-75"
-                  />
-                  
-                  {/* Absolute subtle visual scanlines */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/20" />
-                </div>
-
-                {/* Overlaid simulated HUD info tags */}
-                <div className="absolute top-4 left-4 font-mono text-[10px] bg-black/85 border border-white/10 px-2.5 py-1 text-zinc-300 rounded-md space-y-0.5">
-                  <div>CAM: {selectedClientProject.director}</div>
-                  <div>PROJID: {selectedClientProject.id.toUpperCase()}</div>
-                </div>
-
-                <div className="absolute top-4 right-4 font-mono text-[10px] bg-black/85 border border-white/10 px-2.5 py-1 text-zinc-300 rounded-md">
-                  FPS: <span className="text-blue-400">23.976</span>
-                </div>
-
-                {/* Absolute overlay for play fader */}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition">
-                  <button 
-                    onClick={() => setIsPlayingVideo(!isPlayingVideo)}
-                    className="h-14 w-14 rounded-full bg-white hover:bg-zinc-100 text-black flex items-center justify-center text-lg shadow-xl cursor-pointer transition-transform duration-300 hover:scale-105"
-                  >
-                    {isPlayingVideo ? <Pause className="w-5 h-5 text-black fill-black" /> : <Play className="w-5 h-5 text-black fill-black ml-1" />}
-                  </button>
-                </div>
-
-                {/* Bottom Scrub panel */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
-                  
-                  <div className="flex justify-between items-center text-[10px] font-mono text-zinc-300 pb-2">
-                    <span className="flex items-center gap-1">
-                      <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse"></span>
-                      TIMECODE: <span className="text-white font-bold">{currentTimecode}</span>
-                    </span>
-                    <span>TARGET WORKFLOW: ACES RAW SPEC</span>
-                  </div>
-
-                  {/* Timeline Scrub track */}
-                  <div 
-                    onClick={handleScrubTimeline}
-                    className="h-2 bg-zinc-800 rounded-full overflow-hidden relative cursor-col-resize hover:h-2.5 transition-all"
-                  >
-                    <div 
-                      className="absolute inset-y-0 left-0 bg-blue-600" 
-                      style={{ width: `${(currentSeconds / videoDuration) * 100}%` }}
-                    />
-                    
-                    {/* Simulated comment tags along timeline */}
-                    {projectComments.map((comment) => {
-                      const percentage = (comment.timeInSeconds / videoDuration) * 100;
-                      return (
-                        <div
-                          key={comment.id}
-                          className="absolute h-3 w-1.5 bg-blue-400 border border-black top-[-2px] rounded-full hover:scale-125 transition"
-                          style={{ left: `${percentage}%` }}
-                          title={comment.text}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCurrentSeconds(comment.timeInSeconds);
-                            setCurrentTimecode(comment.timecode);
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-
-                </div>
-
-              </div>
-            </div>
-
-            {/* Core Comment Log box */}
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h4 className="font-display font-bold text-zinc-950 text-sm uppercase">Add Review Marker at {currentTimecode}</h4>
-                <p className="text-zinc-400 text-[10px] font-mono">&gt; Click timeline scrub bar to select frame target</p>
-              </div>
-
-              <form onSubmit={handleAddReviewComment} className="flex gap-3">
-                <input
-                  type="text"
-                  placeholder="e.g. 'Color grading feels a tiny bit offset here. Let's saturate the highlights.' "
-                  value={clientCommentInput}
-                  onChange={(e) => setClientCommentInput(e.target.value)}
-                  className="flex-1 px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-600 transition font-mono"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 transition text-white text-xs font-mono font-medium rounded-xl flex items-center gap-1.5 cursor-pointer shadow-md border border-blue-600"
-                >
-                  <Send className="w-3.5 h-3.5" /> MARK FRAME
-                </button>
-              </form>
-            </div>
-
-            {/* Comment details list */}
-            <div className="space-y-4 pt-4 border-t border-zinc-100">
-              <h4 className="font-display font-semibold text-zinc-900 text-xs uppercase tracking-wider">Active Marker Feed</h4>
-              
-              <div className="space-y-3.5 max-h-64 overflow-y-auto">
-                {projectComments.map((comment) => (
-                  <div 
-                    key={comment.id} 
-                    className={`p-4 border rounded-2xl flex flex-col md:flex-row justify-between gap-3 items-start transition ${
-                      comment.isResolved 
-                        ? "bg-zinc-55/30 border-zinc-200 opacity-40 shadow-none" 
-                        : "bg-zinc-50/50 border-zinc-200/80 hover:border-zinc-300 shadow-[0_2px_10px_rgba(0,0,0,0.01)]"
-                    }`}
-                  >
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono bg-blue-50 text-blue-750 px-2 py-0.5 rounded-full border border-blue-100">
-                          {comment.timecode}
-                        </span>
-                        <span className="text-xs font-bold text-zinc-800">{comment.user}</span>
-                        <span className="text-[9px] font-mono text-zinc-400">{comment.timestamp}</span>
-                      </div>
-                      <p className="text-zinc-650 text-xs font-mono leading-relaxed">{comment.text}</p>
-                    </div>
-
-                    <button
-                      onClick={() => toggleResolveComment(comment.id)}
-                      className={`px-3 py-1 rounded-full text-[9px] font-mono transition cursor-pointer shrink-0 ${
-                        comment.isResolved 
-                          ? "bg-zinc-100 text-zinc-400 border border-zinc-200" 
-                          : "bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100"
-                      }`}
-                    >
-                      {comment.isResolved ? "RESOLVED" : "RESOLVE"}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-          </div>
-
-          {/* Right Area: Timelines & Budget indexes */}
-          <div className="lg:col-span-4 space-y-6">
-            
-            {/* Dynamic Status Index banner */}
-            <div className="p-6 bg-white border border-zinc-200/80 rounded-3xl space-y-4 shadow-sm text-zinc-900">
-              <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest block font-bold">PRODUCTION HEALTH INDEX</span>
-              
-              <div className="space-y-3 font-mono text-xs">
-                <div>
-                  <div className="flex justify-between text-zinc-700 mb-1">
-                    <span>Task Completion</span>
-                    <span className="text-zinc-950 font-bold">{selectedClientProject.completionPercentage}%</span>
-                  </div>
-                  <div className="h-1.5 bg-zinc-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-blue-600" style={{ width: `${selectedClientProject.completionPercentage}%` }} />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-zinc-700 mb-1">
-                    <span>Budget Consumed</span>
-                    <span className="text-zinc-950 font-bold">{selectedClientProject.budgetSpentPercentage}% ({selectedClientProject.budgetTotal})</span>
-                  </div>
-                  <div className="h-1.5 bg-zinc-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-blue-600" style={{ width: `${selectedClientProject.budgetSpentPercentage}%` }} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-zinc-100 text-[11px] font-mono text-zinc-500 flex justify-between">
-                <span>NEXT SHOT BLOCK:</span>
-                <span className="text-zinc-900 font-bold">{selectedClientProject.nextShootDate || "On schedule"}</span>
-              </div>
-            </div>
-
-            {/* Phased Project Milestone Timeline tracker */}
-            <div className="p-6 bg-white border border-zinc-200/80 rounded-3xl space-y-4 shadow-sm text-zinc-900">
-              <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest block font-bold">PROJECT MILESTONES</span>
-
-              <div className="space-y-4 timeline-feed">
-                {selectedClientProject.timeline.map((step) => (
-                  <div key={step.id} className="relative flex gap-3 text-xs">
-                    {/* Line connection */}
-                    <div className="flex flex-col items-center">
-                      <div className={`h-5 w-5 rounded-full flex items-center justify-center font-bold text-[10px] ${
-                        step.status === "completed" 
-                          ? "bg-black text-white" 
-                          : step.status === "current" 
-                            ? "bg-blue-600 text-white font-semibold shadow-sm animate-pulse" 
-                            : "bg-zinc-100 text-zinc-400"
-                      }`}>
-                        {step.status === "completed" ? "✓" : "!"}
-                      </div>
-                      <div className="w-0.5 bg-zinc-100 flex-1 min-h-[30px]" />
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[9px] font-mono text-zinc-400 uppercase">{step.dueDate}</span>
-                      <h4 className={`font-display font-medium text-sm leading-tight ${step.status === "current" ? "text-blue-600" : "text-zinc-900"}`}>
-                        {step.title}
-                      </h4>
-                      <p className="text-zinc-500 text-[11px] leading-snug">{step.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
       </section>
+
 
       {/* ABOUT / THE LEAD TEAM & MISSION */}
-      <section id="about-section" className="py-24 px-4 bg-zinc-50/40 border-t border-zinc-200/80">
+      <section id="vision-statement-section" className="py-24 px-4 bg-zinc-50/40 border-t border-zinc-200/80">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           <div className="space-y-6">
             <div className="space-y-3">
               <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// SITE MISSION STATEMENT & ABOUT US</span>
               <h2 className="text-4xl font-display font-black text-zinc-900 tracking-tight leading-tight">
-                STORIES THAT MATTERED. VISIONS THAT REMAIN.
+                BRINGING VISION TO LIFE
               </h2>
             </div>
             
             <p className="text-zinc-650 text-sm leading-relaxed font-sans">
-              We operate at the core of human legacy. In an era dominated by superficial scroll culture and cold digital specs, we have shifted our gaze. We are transitioning our philosophy from simple mechanical future-shaping to something older and deeper: telling stories that matter. Stories of raw survival, ecological connection, cosmic longing, and domestic solace.
+              To transform ideas into immersive visual experiences that resonate with depth, authenticity, and cinematic excellence. At Hard Rain Productions, we bridge the gap between creative vision and technical precision, delivering storytelling that doesn't just show—it moves, inspires, and endures.
             </p>
 
-            <p className="text-zinc-650 text-sm leading-relaxed font-sans">
-              By merging authentic cinematic craftsmanship—from premium Cooke glass to intimate natural lighting—with modern search-readable metadata, we ensure our projects touch human hearts while being recognized by machine intelligence. Each project is crafted with deep artistic intent, ensuring your vision moves people from the screen to the soul.
-            </p>
-
-            <div className="grid grid-cols-2 gap-6 min-w-full font-mono text-xs text-zinc-600 pt-2">
-              <div className="p-4 border border-zinc-200 rounded-xl space-y-2 bg-white shadow-sm">
-                <span className="text-blue-700 font-bold block">01 / ANALOG HEART</span>
-                <p className="text-zinc-500 text-[11px] leading-relaxed">Cooke primes, natural lighting, soulful pacing, raw human connection.</p>
-              </div>
-              <div className="p-4 border border-zinc-200 rounded-xl space-y-2 bg-white shadow-sm">
-                <span className="text-slate-800 font-bold block">02 / MACHINE COMPATIBLE</span>
-                <p className="text-zinc-500 text-[11px] leading-relaxed">Rich semantic schema, searchable metadata logs.</p>
-              </div>
+            <div className="pt-6 border-t border-zinc-200">
+               <h3 className="text-xl font-display font-bold mb-2">Scott Bernstein, Founder/Producer</h3>
+               <p className="text-zinc-650 text-sm leading-relaxed font-sans">
+                 Scott Bernstein brings a deep commitment to human-centric filmmaking. With a career rooted in both institutional trust and artistic narrative, Scott leads the studio’s mission to elevate every project through collaborative storytelling and technical precision.
+               </p>
             </div>
-          </div>
+
+            </div>
 
           {/* Interactive display image / team mockup rendering */}
           <div className="relative aspect-[4/3] rounded-3xl overflow-hidden group border border-zinc-200">
@@ -1085,6 +734,41 @@ export default function App() {
             </div>
           </div>
 
+        </div>
+      </section>
+
+      <section id="equipment-section" className="py-24 px-4 max-w-7xl mx-auto space-y-12 bg-zinc-900 rounded-3xl mb-12">
+        <div className="max-w-7xl mx-auto space-y-8">
+            <div className="space-y-3">
+              <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// TECHNICAL CAPABILITIES</span>
+              <h2 className="text-4xl font-display font-black text-white tracking-tight leading-tight">OUR EQUIPMENT</h2>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 min-w-full font-mono text-xs pt-2">
+              <div className="p-3 border border-zinc-700 rounded-xl space-y-1 bg-zinc-800 shadow-sm">
+                <span className="text-blue-400 font-bold block text-[10px]">CAMERA</span>
+                <p className="text-zinc-300 text-[10px] leading-relaxed">ARRI Alexa 35, Mini LF, Venice 2, RED V-Raptor.</p>
+              </div>
+              <div className="p-3 border border-zinc-700 rounded-xl space-y-1 bg-zinc-800 shadow-sm">
+                <span className="text-blue-400 font-bold block text-[10px]">GLASS</span>
+                <p className="text-zinc-300 text-[10px] leading-relaxed">Cooke Anamorphic/i, Atlas Orion, Leica Summicron-C.</p>
+              </div>
+              <div className="p-3 border border-zinc-700 rounded-xl space-y-1 bg-zinc-800 shadow-sm">
+                <span className="text-blue-400 font-bold block text-[10px]">WORKFLOW</span>
+                <p className="text-zinc-300 text-[10px] leading-relaxed">ACES 1.3 color spaces, unified metadata.</p>
+              </div>
+              <div className="p-3 border border-zinc-700 rounded-xl space-y-1 bg-zinc-800 shadow-sm">
+                <span className="text-blue-400 font-bold block text-[10px]">AERIAL</span>
+                <p className="text-zinc-300 text-[10px] leading-relaxed">High-res drone, stabilized systems.</p>
+              </div>
+              <div className="p-3 border border-zinc-700 rounded-xl space-y-1 bg-zinc-800 shadow-sm">
+                <span className="text-blue-400 font-bold block text-[10px]">CGI</span>
+                <p className="text-zinc-300 text-[10px] leading-relaxed">3D modeling, simulation, compositing.</p>
+              </div>
+              <div className="p-3 border border-zinc-700 rounded-xl space-y-1 bg-zinc-800 shadow-sm">
+                <span className="text-blue-400 font-bold block text-[10px]">STABILIZATION</span>
+                <p className="text-zinc-300 text-[10px] leading-relaxed">Gimbal, crane, dolly movement.</p>
+              </div>
+            </div>
         </div>
       </section>
 
@@ -1145,10 +829,10 @@ export default function App() {
           <a href="#about-section" className="hover:text-zinc-900">PHILOSOPHY</a>
           <a href="#portfolio-section" className="hover:text-zinc-900">INDEXED WORKS</a>
           <a href="#client-portal-section" className="hover:text-zinc-900">PORTAL LOGS</a>
-          <a href="/api/ai-agent-manifest" target="_blank" className="hover:text-blue-500 text-blue-600 font-bold flex items-center gap-1">
-            <Cpu className="w-3 h-3" />
-          </a>
         </div>
+        <p className="text-[9px] text-zinc-400 mt-4 md:mt-0 max-w-sm text-center md:text-right">
+            Privacy Policy: Hard Rain Productions respects your privacy. We only collect contact information provided for inquiries. We do not sell or share data. By contacting us, you agree to these terms.
+        </p>
       </footer>
 
     </div>

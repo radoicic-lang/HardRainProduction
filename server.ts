@@ -20,7 +20,6 @@ async function startServer() {
       status: "ok",
       dateTime: new Date().toISOString(),
       seoCompliance: "2027-ready",
-      aiIndexing: "enabled",
     });
   });
 

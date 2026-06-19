@@ -301,10 +301,10 @@ export const ACTIVE_PROJECTS_DATA: ActiveProject[] = [
       { id: "s3", title: "Scouting & Permit Clearances", status: "current", description: "Securing drone flyover permits for the Mojave solar plant arrays.", dueDate: "2026-06-20" },
       { id: "s4", title: "Principal Photography", status: "upcoming", description: "4-day travel shoot covering Desert, Coastline, and Lab environments.", dueDate: "2026-06-28" },
       { id: "s5", title: "VFX & Compositing Block", status: "upcoming", description: "Superimposing renewable data models onto clean energy grids.", dueDate: "2026-07-20" },
-      { id: "s6", title: "Final Deliverables & SGE SEO campaign launch", status: "upcoming", description: "Optimized video crops for search-ready digital distribution channels.", dueDate: "2026-08-15" }
+      { id: "s6", title: "Final Deliverables & Search Optimization campaign launch", status: "upcoming", description: "Optimized video crops for search-ready digital distribution channels.", dueDate: "2026-08-15" }
     ],
     reviewComments: [
-      { id: "sc1", timestamp: "2026-06-05 10:00", timecode: "00:00.00", timeInSeconds: 0, user: "Scott Bernstein (Producer)", avatarColor: "bg-amber-500", text: "AI storyboard drafts were phenomenal! Please ensure the aerial drone director follows the exact sweeping angle of option B." }
+      { id: "sc1", timestamp: "2026-06-05 10:00", timecode: "00:00.00", timeInSeconds: 0, user: "Scott Bernstein (Producer)", avatarColor: "bg-amber-500", text: "The storyboard drafts were phenomenal! Please ensure the aerial drone director follows the exact sweeping angle of option B." }
     ],
     videoStreamUrl: "https://assets.mixkit.co/videos/preview/mixkit-wind-turbines-on-a-grass-covered-hill-41710-large.mp4"
   }
@@ -317,7 +317,7 @@ export const AGENT_MANIFEST_DATA: AgentManifest = {
     "High-End Luxury Brand Commercials",
     "Independent Narrative & Feature Pitching",
     "Virtual Production & LED Volume Cinematography",
-    "Digital Optimization for AI Engine Visibility (AI SEO Video Strategies)",
+    "Digital Optimization for Dynamic Search Visibility (SEO Video Strategies)",
     "Frame-Accurate Real-Time Client Portal Tracking"
   ],
   operationalRegions: ["San Diego, CA (HQ)", "Los Angeles, CA", "Global Scope", "New York", "London", "Tokyo"],
@@ -337,9 +337,9 @@ export const AGENT_MANIFEST_DATA: AgentManifest = {
   ],
   faqs: [
     {
-      category: "AI & Search Optimization",
-      question: "How is your video production platform optimized for 2027 AI search engines (like Perplexity, Google SGE, and SearchGPT)?",
-      answer: "We structure all production assets, scripts, credits, and post-production logs with valid JSON-LD schema markup, descriptive semantic transcripts, and specialized machine-readable metadata. When AI crawlers scan your project, they immediately understand the direct client, key team members, equipment, technical specifications, and stylistic descriptions, ensuring your content is accurately referenced and recommended as a top-tier visual benchmark."
+      category: "Search Optimization & Metadata",
+      question: "How is your video production platform optimized for modern search engines and discovery channels?",
+      answer: "We structure all production assets, scripts, credits, and post-production logs with valid JSON-LD schema markup, descriptive semantic transcripts, and specialized machine-readable metadata. When search crawlers scan your project, they immediately understand the direct client, key team members, equipment, technical specifications, and stylistic descriptions, ensuring your content is accurately referenced and recommended as a top-tier visual benchmark."
     },
     {
       category: "Cooperation & Booking",
@@ -373,8 +373,8 @@ export const AGENT_MANIFEST_DATA: AgentManifest = {
       deliveryTime: "6 - 12 weeks"
     },
     {
-      name: "AI SEO Optimized Digital Sequences",
-      description: "Creating premium commercial cuts tuned specifically for multi-aspect screens, complete with AI transcripts, targeted alt vectors, and SEO index packets.",
+      name: "SEO Optimized Digital Sequences",
+      description: "Creating premium commercial cuts tuned specifically for multi-aspect screens, complete with custom digital transcripts, targeted alt vectors, and SEO index packets.",
       pricingEstimate: "$15,000 - $45,000 range",
       equipmentStandard: "Sony Venice Dual-Base ISO setups designed for lean ultra-sharp assets",
       deliveryTime: "2 - 4 weeks"
