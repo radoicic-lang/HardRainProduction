@@ -112,8 +112,6 @@ export default function App() {
   const [currentSeconds, setCurrentSeconds] = useState(0);
   const [videoDuration, setVideoDuration] = useState(120); // standard 2 minutes mockup
   const [clientCommentInput, setClientCommentInput] = useState("");
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [activeProjectTimeline, setActiveProjectTimeline] = useState<Milestone[]>(ACTIVE_PROJECTS_DATA[0].timeline);
   const [projectComments, setProjectComments] = useState<ReviewComment[]>(ACTIVE_PROJECTS_DATA[0].reviewComments);
 
   // Listen to scrolls for Sticky Nav
@@ -153,7 +151,6 @@ export default function App() {
 
   // Sync client portal reviews state when dynamic project swaps
   useEffect(() => {
-    setActiveProjectTimeline(selectedClientProject.timeline);
     setProjectComments(selectedClientProject.reviewComments);
     setCurrentSeconds(0);
     setCurrentTimecode("00:00.00");
@@ -208,22 +205,6 @@ export default function App() {
     setProjectComments(projectComments.map(c => 
       c.id === commentId ? { ...c, isResolved: !c.isResolved } : c
     ));
-  };
-
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const response = await fetch("/api/send-email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-    if (response.ok) {
-      alert("Message sent!");
-      setFormData({ name: "", email: "", message: "" });
-    } else {
-      alert("Error sending message.");
-    }
   };
 
   // Automated AI Semantic search keyword matcher for Portfolio Smart Tagging
@@ -383,42 +364,26 @@ export default function App() {
         {/* TOP LINE INTRODUCTIONS */}
         <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col justify-center items-start mt-12 gap-8">
           
-          {/* Studio Hook */}
-          <div className="space-y-4 max-w-4xl">
+
+        {/* Studio Hook (Moved) */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col justify-center items-end mt-[500px] gap-8">
+           <div className="space-y-4 max-w-4xl text-right">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-900/80 border border-zinc-800 text-zinc-400 text-[10px] font-mono rounded-full uppercase tracking-[0.2em]">
                ✧ CINEMATIC REEL SHOWCASE
             </div>
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-white leading-tight whitespace-nowrap">
               We Bring <span className="italic inline font-light text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-300">Vision to your ideas.</span>
             </h1>
+           </div>
+           
+           <div className="w-full max-w-4xl text-left">
             <p className="text-white text-base md:text-lg leading-relaxed max-w-xl font-sans font-light">
-              Stories that move people, from the screen to the soul. A prestigious, human-centric production studio embodying high-end craftsmanship and deep emotional impact.
+              Stories that move people, from the screen to the soul.<br /> A prestigious, human-centric production studio embodying high-end craftsmanship and deep emotional impact.
             </p>
-
-          </div>
-
-        </div>
-
-        {/* BOTTOM ACTIVE METADATA PREVIEW BLOCK */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 border-t border-zinc-900 pt-8 text-xs font-mono">
-          <div className="space-y-1">
-            <span className="text-zinc-600 uppercase tracking-widest text-[9px] block">ACTIVE REEL MASTER</span>
-            <span className="text-zinc-200 block truncate font-medium">{selectedHeroItem.title}</span>
-          </div>
-          <div className="space-y-1">
-            <span className="text-zinc-600 uppercase tracking-widest text-[9px] block">CAMERA PACKAGE</span>
-            <span className="text-zinc-200 block truncate">{selectedHeroItem.cameraPackage}</span>
-          </div>
-          <div className="space-y-1">
-            <span className="text-zinc-600 uppercase tracking-widest text-[9px] block">LENSES / ASPECT</span>
-            <span className="text-zinc-200 block">{selectedHeroItem.lensesUsed} ({selectedHeroItem.aspectRatio})</span>
-          </div>
-          <div className="space-y-1">
-            <span className="text-zinc-600 uppercase tracking-widest text-[9px] block">COLOR WORKFLOW</span>
-            <span className="text-blue-400 block">{selectedHeroItem.colorSpace}</span>
           </div>
         </div>
-
+        
+        </div>
       </header>
 
       <ClientLogoCarousel />
@@ -1032,7 +997,7 @@ export default function App() {
               <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest block font-bold">PROJECT MILESTONES</span>
 
               <div className="space-y-4 timeline-feed">
-                {activeProjectTimeline.map((step) => (
+                {selectedClientProject.timeline.map((step) => (
                   <div key={step.id} className="relative flex gap-3 text-xs">
                     {/* Line connection */}
                     <div className="flex flex-col items-center">
@@ -1135,22 +1100,24 @@ export default function App() {
             </p>
           </div>
 
-          <form className="bg-zinc-50 p-8 rounded-2xl border border-zinc-200 shadow-sm space-y-6" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
+          <form action="https://formspree.io/f/xeewbnnw" method="POST" className="bg-zinc-50 p-8 rounded-2xl border border-zinc-200 shadow-sm space-y-6">
+            <div className="space-y-2">
                 <label htmlFor="name" className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Name</label>
-                <input type="text" id="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-3 rounded-lg border border-zinc-200 focus:ring-2 focus:ring-blue-500 outline-none transition" required />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Email</label>
-                <input type="email" id="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-3 rounded-lg border border-zinc-200 focus:ring-2 focus:ring-blue-500 outline-none transition" required />
-              </div>
+                <input type="text" id="name" name="name" className="w-full px-4 py-3 rounded-lg border border-zinc-200 focus:ring-2 focus:ring-blue-500 outline-none transition" required />
             </div>
             <div className="space-y-2">
-              <label htmlFor="message" className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Message</label>
-              <textarea id="message" rows={4} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-4 py-3 rounded-lg border border-zinc-200 focus:ring-2 focus:ring-blue-500 outline-none transition" required></textarea>
+                <label htmlFor="email" className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Email Address</label>
+                <input type="email" id="email" name="email" className="w-full px-4 py-3 rounded-lg border border-zinc-200 focus:ring-2 focus:ring-blue-500 outline-none transition" required />
             </div>
-            <button type="submit" className="w-full py-4 bg-black text-white font-mono text-sm uppercase tracking-widest rounded-lg hover:bg-zinc-800 transition">Send Message</button>
+            <div className="space-y-2">
+                <label htmlFor="number" className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Phone Number</label>
+                <input type="tel" id="number" name="number" className="w-full px-4 py-3 rounded-lg border border-zinc-200 focus:ring-2 focus:ring-blue-500 outline-none transition" />
+            </div>
+            <div className="space-y-2">
+                <label htmlFor="message" className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Inquiry Message</label>
+                <textarea id="message" name="message" rows={4} className="w-full px-4 py-3 rounded-lg border border-zinc-200 focus:ring-2 focus:ring-blue-500 outline-none transition" required></textarea>
+            </div>
+            <button type="submit" className="w-full py-4 bg-black text-white font-mono text-sm uppercase tracking-widest rounded-lg hover:bg-zinc-800 transition">Submit</button>
           </form>
 
           {/* FOOTER */}
