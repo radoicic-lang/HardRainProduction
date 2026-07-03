@@ -1,6 +1,35 @@
-import { PortfolioItem, ActiveProject, AgentManifest } from "./types";
+import { PortfolioItem, ActiveProject, AgentManifest, Testimonial } from "./types";
 
+/**
+ * MANUAL VIMEO VIDEO LINKS & DATA
+ * To manually put video links, simply change the `vimeoVideoId` properties below
+ * to any Vimeo Video ID (e.g. "1202329639").
+ * The app will dynamically fetch the correct titles, synopses, and thumbnails from Vimeo!
+ */
 export const PORTFOLIO_DATA: PortfolioItem[] = [
+  {
+    id: "vimeo-custom-new",
+    title: "HRP SHOWCASE / SPECS",
+    client: "Hard Rain Productions",
+    category: "Commercial",
+    aspectRatio: "16:9",
+    videoDuration: "2:00",
+    role: "Director / DP",
+    thumbnailUrl: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&q=80&w=1200",
+    director: "Scott Bernstein",
+    cinematographer: "Evelyn Kross",
+    budgetGrade: "Tier-1 (Premium)",
+    cameraPackage: "ARRI Alexa Mini LF",
+    lensesUsed: "Cooke Anamorphic",
+    colorSpace: "Arri log-C4 (ACES workflow)",
+    releaseYear: "2027",
+    synopsis: "Official cinematic showpiece. Exploring pristine motion and grand artistic scale.",
+    projectStory: "Designed as an immersive sensory experience, this production leverages state-of-the-art camera tech and color workflows.",
+    technicalCraftDetails: "Shot in HDR using an advanced ARRI system.",
+    resultImpact: "Highly successful campaign with deep emotional and commercial resonance.",
+    moodTags: ["Immersive", "Vibrant", "Premium", "Anamorphic", "Stunning"],
+    vimeoVideoId: "1201990301"
+  },
   {
     id: "lumina-2027",
     title: "CALIFORNIA BANK & TRUST (OFFICIAL BANK OF SAN DIEGO FC)",
@@ -381,3 +410,55 @@ export const AGENT_MANIFEST_DATA: AgentManifest = {
     }
   ]
 };
+
+export const TESTIMONIALS_DATA: Testimonial[] = [
+  {
+    id: "t0",
+    quote: "Our marketing team had the pleasure of working with Hard Rain Productions on the recent California Bank & Trust Official Bank of San Diego FC commercial. They did an absolutely phenomenal job bringing our vision to life. They are receptive to feedback, easy to collaborate with, and consistently deliver a high-quality final product. I highly recommend them for any video production needs!",
+    author: "Sarah Bilyeu",
+    role: "Vice President / Marketing Strategist",
+    company: "California Bank & Trust",
+    category: "Commercial"
+  },
+  {
+    id: "t4",
+    quote: "In addition to the superb quality of the work, one of the primary reasons we’ve worked with Hard Rain Productions for more than 25 years is that we know they genuinely care about their clients and the finished product. They’re not just guns for hire, they’re true partners. We trust their process and know they’re going to bring each vision to life.",
+    author: "Cody Martinez",
+    role: "Chairman",
+    company: "Sycuan Band of the Kumeyaay Nation",
+    category: "Partnership"
+  },
+  {
+    id: "t5",
+    quote: "Scott pitched me a creative concept I liked so much, I was angry I didn’t think of it myself.",
+    author: "Rodney Dangerfield",
+    role: "Legendary Comedian",
+    company: "Entertainment",
+    category: "Creative"
+  },
+  {
+    id: "t6",
+    quote: "Hard Rain really serves as an extension of our staff. We trust their insights on strategy, branding, media and all aspects of production. Hard Rain has proven to be creative, efficient, reliable, cost-effective and they always deliver a top-shelf product. There’s a tremendous comfort level working with them.",
+    author: "Adam Day",
+    role: "Chief Administrative Officer",
+    company: "Sycuan Band of the Kumeyaay Nation",
+    category: "Strategy & Production"
+  },
+  {
+    id: "t7",
+    quote: "I love the passion Hard Rain brings to a project. Their energy is infectious and it comes through in the work.",
+    author: "Bill Walton",
+    role: "NBA Hall-of-Famer",
+    company: "Sports & Broadcast",
+    category: "Passion"
+  },
+  {
+    id: "t8",
+    quote: "Working with Hard Rain Productions to produce our spa's promotional video was an outstanding experience from start to finish. Their team’s professionalism and creative vision resulted in stunning visual content that beautifully showcases our services. Their extremely talented team were efficient, patient and a pleasure to work with.",
+    author: "Nancy King",
+    role: "Director",
+    company: "Spa Ritual",
+    category: "Promotional"
+  }
+];
+

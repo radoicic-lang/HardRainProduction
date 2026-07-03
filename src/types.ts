@@ -76,6 +76,15 @@ export interface ServiceDetail {
   deliveryTime: string;
 }
 
+export interface Testimonial {
+  id: string;
+  quote: string;
+  author: string;
+  role: string;
+  company: string;
+  category?: string;
+}
+
 export interface AgentManifest {
   companyName: string;
   producerName: string;

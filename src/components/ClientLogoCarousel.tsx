@@ -2,13 +2,21 @@ import React from 'react';
 import { motion } from 'motion/react';
 
 const clients = [
+  "Sycuan Band of the Kumeyaay Nation",
   "California Bank & Trust",
-  "San Diego FC",
-  "Spa Ritual Wellness",
-  "Biomechanic Fitness",
-  "Sycuan Health",
-  "Drakes Restaurant",
-  "Feeding San Diego",
+  "U.S. International Media",
+  "The City of Los Angeles",
+  "Sycuan Casino Resort",
+  "Singing Hills Golf Course",
+  "Spa Ritual",
+  "Sycuan Health Center",
+  "Sycuan Fire Department",
+  "Alpha Project",
+  "California Nations Indian Gaming Association",
+  "San Diego State University",
+  "NFL Alumni Association",
+  "Wes Chandler",
+  "ASX Composites"
 ];
 
 // Duplicate to create seamless loop

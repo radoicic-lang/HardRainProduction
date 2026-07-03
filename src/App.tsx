@@ -28,9 +28,9 @@ import {
   Phone,
   Video
 } from "lucide-react";
-import { PORTFOLIO_DATA, ACTIVE_PROJECTS_DATA, AGENT_MANIFEST_DATA } from "./data";
+import { PORTFOLIO_DATA, ACTIVE_PROJECTS_DATA, AGENT_MANIFEST_DATA, TESTIMONIALS_DATA } from "./data";
 import { ClientLogoCarousel } from "./components/ClientLogoCarousel";
-import { PortfolioItem, ActiveProject, ReviewComment, Milestone } from "./types";
+import { PortfolioItem, ActiveProject, ReviewComment, Milestone, Testimonial } from "./types";
 import { motion, AnimatePresence } from "motion/react";
 
 export default function App() {
@@ -53,6 +53,21 @@ export default function App() {
   const [selectedPortfolioItem, setSelectedPortfolioItem] = useState<PortfolioItem | null>(null);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
 
+  // Scott Profile Hover States & Refs
+  const [isScottHovered, setIsScottHovered] = useState(false);
+  const scottVideoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    if (scottVideoRef.current) {
+      if (isScottHovered) {
+        scottVideoRef.current.play().catch(err => console.log("Video play error:", err));
+      } else {
+        scottVideoRef.current.pause();
+        scottVideoRef.current.currentTime = 0;
+      }
+    }
+  }, [isScottHovered]);
+
   // Dynamically fetch Vimeo titles/metadata and update throughout the website
   useEffect(() => {
     const fetchVimeoMetadata = async () => {
@@ -68,11 +83,15 @@ export default function App() {
               );
               if (response.ok) {
                 const data = await response.json();
-                if (data.title && updatedItems[index].title !== data.title) {
+                const fetchedTitle = data.title ? data.title.replace(/&amp;/g, "&").toUpperCase() : "";
+                const fetchedThumb = data.thumbnail_url || updatedItems[index].thumbnailUrl;
+                
+                if (fetchedTitle && (updatedItems[index].title !== fetchedTitle || updatedItems[index].thumbnailUrl !== fetchedThumb)) {
                   updatedItems[index] = {
                     ...updatedItems[index],
-                    title: data.title.replace(/&amp;/g, "&").toUpperCase(),
+                    title: fetchedTitle,
                     synopsis: data.description || updatedItems[index].synopsis,
+                    thumbnailUrl: fetchedThumb,
                   };
                   changed = true;
                 }
@@ -183,21 +202,13 @@ export default function App() {
             className="flex items-center gap-3 cursor-pointer"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            <div className="h-10 w-10 relative overflow-hidden rounded-full border border-blue-500/25 shadow-md bg-zinc-950">
-              <img 
-                src="https://i.vimeocdn.com/portrait/122280093_288x288?subrect=0%2C0%2C499%2C499&r=cover&sig=1e999a8ff4532f26453fda4a25ef6cc1975fd035df4523af5f138d6507ef7d00&v=1&region=us" 
-                alt="HARD RAIN Logo" 
-                referrerPolicy="no-referrer"
-                className="h-full w-full object-cover select-none"
-              />
-            </div>
             <div>
               <span className={`font-display font-bold text-base tracking-widest transition-colors duration-300 ${
                 hasScrolled ? "text-zinc-900" : "text-white"
               }`}>HARD RAIN</span>
               <span className={`hidden sm:inline font-mono text-[9px] ml-2 tracking-widest uppercase transition-colors duration-300 ${
                 hasScrolled ? "text-zinc-500" : "text-zinc-400"
-              }`}>PRODUCTIONS // SAN DIEGO</span>
+              }`}>PRODUCTIONS</span>
             </div>
           </div>
 
@@ -219,14 +230,8 @@ export default function App() {
             <button onClick={() => { setActiveTab("services"); document.getElementById("services-section")?.scrollIntoView({ behavior: "smooth" }); }} className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${activeTab === "services" ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")}`}>
               SERVICES
             </button>
-            <button onClick={() => { setActiveTab("faq"); document.getElementById("faq-section")?.scrollIntoView({ behavior: "smooth" }); }} className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${activeTab === "faq" ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")}`}>
-              FAQ
-            </button>
-            <button onClick={() => { setActiveTab("vision"); document.getElementById("vision-statement-section")?.scrollIntoView({ behavior: "smooth" }); }} className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${activeTab === "vision" ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")}`}>
-              VISION
-            </button>
-            <button onClick={() => { setActiveTab("equipment"); document.getElementById("equipment-section")?.scrollIntoView({ behavior: "smooth" }); }} className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${activeTab === "equipment" ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")}`}>
-              EQUIPMENT
+            <button onClick={() => { setActiveTab("testimonials"); document.getElementById("testimonials-section")?.scrollIntoView({ behavior: "smooth" }); }} className={`px-4 py-1.5 rounded-full text-[11px] font-mono tracking-wider transition-all duration-300 ${activeTab === "testimonials" ? (hasScrolled ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)]" : "bg-white text-black font-semibold") : (hasScrolled ? "text-zinc-500 hover:text-black" : "text-zinc-400 hover:text-white")}`}>
+              TESTIMONIALS
             </button>
           </div>
 
@@ -247,31 +252,16 @@ export default function App() {
       {/* HERO SECTION / THE IMMERSIVE "HOOK" */}
       <header id="hero-heading" className="relative min-h-screen flex flex-col justify-between pt-24 pb-8 px-4 md:px-8 overflow-hidden z-10 border-b border-zinc-900 bg-gradient-to-b from-black via-zinc-950 to-[#070709]">
         
-        {/* Full-bleed background viewport (Actual Vimeo background video loop) */}
+        {/* Full-bleed background viewport (Actual Vimeo background video loop for HRP HERO) */}
         <div className="absolute inset-0 z-0 pointer-events-none transition-all duration-700 overflow-hidden">
-          {selectedHeroItem.vimeoVideoId ? (
-            <div className="absolute inset-0 w-full h-full scale-[1.12]">
-              <iframe
-                src={`https://player.vimeo.com/video/${selectedHeroItem.vimeoVideoId}?background=1&autoplay=1&loop=1&byline=0&portrait=0&title=0&muted=1&quality=1080p`}
-                className="absolute top-1/2 left-1/2 w-full h-full -translate-x-1/2 -translate-y-1/2 aspect-[16/9] min-w-full min-h-full object-cover pointer-events-none"
-                allow="autoplay; fullscreen"
-                title={selectedHeroItem.title}
-              />
-            </div>
-          ) : (
-            <>
-              {connectionSpeed === "ultra" && (
-                <div className="absolute inset-0 bg-cover bg-center animate-pulse transition-all duration-1000" style={{ backgroundImage: `url(${selectedHeroItem.thumbnailUrl})` }} />
-              )}
-              {connectionSpeed === "balanced" && (
-                <div className="absolute inset-0 bg-cover bg-center grayscale-50 scale-102 transition-all duration-700" style={{ backgroundImage: `url(${selectedHeroItem.thumbnailUrl})` }} />
-              )}
-              {connectionSpeed === "restricted" && (
-                <div className="absolute inset-0 bg-cover bg-center contrast-[0.8] blur-sm transition-all duration-500" style={{ backgroundImage: `url(${selectedHeroItem.thumbnailUrl})` }} />
-              )}
-            </>
-          )}
-          {/* Futuristic ambient vignette mask */}
+          <div className="absolute inset-0 w-full h-full scale-[1.12]">
+            <iframe
+              src="https://player.vimeo.com/video/1202329639?background=1&autoplay=1&loop=1&byline=0&portrait=0&title=0&muted=1&quality=1080p"
+              className="absolute top-1/2 left-1/2 w-full h-full -translate-x-1/2 -translate-y-1/2 aspect-[16/9] min-w-full min-h-full object-cover pointer-events-none opacity-100"
+              allow="autoplay; fullscreen"
+              title="HRP HERO"
+            />
+          </div>
         </div>
 
         {/* TOP LINE INTRODUCTIONS */}
@@ -279,20 +269,29 @@ export default function App() {
           
 
         {/* Studio Hook (Moved) */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col justify-center items-end mt-[500px] gap-8">
-           <div className="p-8 bg-zinc-900/50 backdrop-blur-sm rounded-3xl space-y-4 max-w-4xl text-right">
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col justify-center items-end mt-[400px] sm:mt-[500px] gap-8">
+           <div className="p-8 bg-zinc-950/20 backdrop-blur-md rounded-3xl border border-zinc-800/80 space-y-6 max-w-2xl text-left shadow-2xl">
              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-900/50 border border-zinc-800 text-zinc-400 text-[10px] font-mono rounded-full uppercase tracking-[0.2em]">
-                ✧ CINEMATIC REEL SHOWCASE
+                ✧ STORIES THAT CONNECT
              </div>
-             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold tracking-tight text-white leading-tight whitespace-nowrap">
-               We Bring <span className="italic inline font-light text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-300">Vision to your ideas.</span>
+             
+             <h1 className="text-3xl sm:text-4xl font-display font-black tracking-tight text-white leading-tight">
+               Stories That Connect
              </h1>
 
-             <div className="w-full text-left">
-              <p className="text-white text-base md:text-lg leading-relaxed max-w-xl font-sans font-light">
-                Stories that move people, from the screen to the soul.<br /> A prestigious, human-centric production studio embodying high-end craftsmanship and deep emotional impact.
-              </p>
-            </div>
+             <div className="space-y-4 text-zinc-300 text-sm leading-relaxed font-sans font-light">
+               <p>
+                 Hard Rain Productions is a full-service creative consultancy. We combine strategy, creativity and production expertise to create content that connects with audiences and inspires action.
+               </p>
+               <p>
+                 Our mission is to transform ideas into immersive visual experiences that resonate with depth, authenticity and cinematic excellence. Every project begins with three simple questions: What is the idea? Why should your audience care? What action do we want them to take? From there, we build compelling visual stories that are crafted with purpose.
+               </p>
+               <p>
+                 At Hard Rain Productions, we don't just produce videos. We develop stories that move, inspire and endure.
+               </p>
+             </div>
+
+
            </div>
         </div>
         
@@ -306,150 +305,200 @@ export default function App() {
       {/* ABOUT US & TEAM */}
       <section id="about-section" className="py-24 px-4 max-w-7xl mx-auto space-y-12">
         <div id="vision-section" className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-4">
-               <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// OUR ETHOS & TEAM</span>
-               <h2 className="text-4xl font-display font-bold tracking-tight text-zinc-900">BRINGING VISION TO LIFE</h2>
-               <p className="text-zinc-600 leading-relaxed font-sans">Hard Rain Productions is a San Diego-based studio dedicated to bringing vision to life. We specialize in stories that move people—from the screen to the soul. We believe in high-end craftsmanship, visual storytelling, and the emotional impact of every frame.</p>
+            <div className="bg-white p-8 sm:p-10 rounded-3xl border border-zinc-200 shadow-sm space-y-4">
+                <h3 className="text-xl sm:text-2xl font-display font-bold leading-tight text-zinc-900">
+                  Scott Bernstein, <span className="text-zinc-500 font-medium text-lg block sm:inline">President / Creative Director / Emmy-Award-Winning Producer</span>
+                </h3>
+                <div className="text-zinc-650 font-sans text-sm sm:text-base leading-relaxed space-y-4">
+                  <p>
+                    After years of working on both sides of the table as a client and an agency partner, Scott Bernstein founded Hard Rain Productions in 2007 with one goal: creating work that matters.
+                  </p>
+                  <p>
+                    Built on the premise that the best ideas come from collaboration, Hard Rain Productions combines thoughtful strategy, compelling storytelling and meticulous execution. Every project maintains a focus on each client’s goals and objectives, ensuring the final product is not only visually striking, but purposeful, authentic and memorable.
+                  </p>
+                </div>
             </div>
-            <div className="bg-zinc-100 p-8 rounded-3xl border border-zinc-200">
-                <h3 className="text-xl font-display font-bold mb-4">Scott Bernstein, Founder/Producer</h3>
-                <p className="text-zinc-600 font-sans leading-relaxed">Scott Bernstein brings a deep commitment to human-centric filmmaking. With a career rooted in both institutional trust and artistic narrative, Scott leads the studio’s mission to elevate every project through collaborative storytelling and technical precision.</p>
+            <div className="flex items-center justify-center md:justify-end w-full max-w-xl">
+              <div 
+                className="relative aspect-video w-full rounded-3xl overflow-hidden bg-black border border-zinc-200/20 shadow-2xl group cursor-pointer"
+                onMouseEnter={() => setIsScottHovered(true)}
+                onMouseLeave={() => setIsScottHovered(false)}
+              >
+                {/* Static Image */}
+                <img 
+                  src="/src/assets/images/Scott.jpg" 
+                  alt="Scott Bernstein" 
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isScottHovered ? "opacity-0" : "opacity-100"}`}
+                  referrerPolicy="no-referrer"
+                />
+
+                {/* Hover Video Loop */}
+                <video
+                  ref={scottVideoRef}
+                  src="/src/assets/images/Scott.mov"
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isScottHovered ? "opacity-100" : "opacity-0"}`}
+                  loop
+                  muted
+                  playsInline
+                />
+
+                {/* Custom Overlay Grid / Vignette */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+
+                {/* Sleek Cinematic play/pause/hover state badge */}
+                <div className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-black/75 backdrop-blur-md rounded-full border border-zinc-800 pointer-events-none">
+                  {isScottHovered ? (
+                    <>
+                      <div className="flex items-center gap-0.5">
+                        <span className="w-1 h-3 bg-blue-500 rounded-full animate-pulse" />
+                        <span className="w-1 h-4 bg-blue-500 rounded-full animate-pulse delay-75" />
+                        <span className="w-1 h-2 bg-blue-500 rounded-full animate-pulse delay-150" />
+                      </div>
+                      <span className="text-[10px] font-mono font-semibold tracking-wider text-white uppercase">PLAYING REEL</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play size={10} fill="currentColor" className="text-blue-500" />
+                      <span className="text-[10px] font-mono font-semibold tracking-wider text-zinc-300 uppercase">HOVER TO PLAY REEL</span>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
         </div>
       </section>
 
 
       {/* CINEMATIC PORTFOLIO / THE "PROOF" */}
-      <section id="portfolio-section" className="py-24 px-4 max-w-7xl mx-auto space-y-12 bg-zinc-900 rounded-3xl mb-12">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-zinc-700 pb-8">
+      <section id="portfolio-section" className="py-24 px-4 md:px-8 max-w-7xl mx-auto space-y-12 mb-12 bg-transparent">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-zinc-200 pb-8">
           <div className="space-y-3">
-            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// CINEMATIC PORTFOLIO INDEXING</span>
-            <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-white">SELECTED MASTERS</h2>
-            <p className="text-zinc-300 text-sm max-w-md font-sans">Curated commercial films and narrative treatments. Use tag parameters to search instantly.</p>
+            <h2 className="text-5xl md:text-7xl font-sans font-black tracking-tight text-zinc-950 uppercase leading-none">THE PORTFOLIO</h2>
+            <p className="text-zinc-500 text-sm md:text-base max-w-xl font-sans">A curated selection of national missions, from cinematic masterpieces to critical infrastructure surveys.</p>
           </div>
 
-          {/* Search & Filters */}
-          <div className="w-full md:w-auto space-y-4">
-            
-            {/* Semantic Query input */}
-            <div className="relative w-full md:w-80">
-              <input
-                type="text"
-                placeholder="Search Portfolio (e.g. 'Arri Alexa Cooke')"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2.5 bg-zinc-800 border border-zinc-700 rounded-full text-xs font-mono text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition shadow-sm"
-              />
-              
-            </div>
+          <button 
+            onClick={() => {
+              setSearchQuery("");
+              setPortfolioCategory("All");
+            }}
+            className="px-6 py-3 border border-zinc-300 hover:border-zinc-500 rounded-full text-xs font-sans font-bold uppercase tracking-wider text-zinc-900 hover:bg-zinc-50 transition duration-300 shrink-0 cursor-pointer"
+          >
+            VIEW ALL MISSIONS
+          </button>
+        </div>
 
-            {/* Normal category chips */}
-            <div className="flex flex-wrap gap-1.5">
-              {[
-                { id: "All", label: "ALL WORK" },
-                { id: "The Impact", label: "THE IMPACT (Commercials)" },
-                { id: "The Truth", label: "THE TRUTH (Documentaries)" },
-                { id: "The Craft", label: "THE CRAFT (Narrative)" }
-              ].map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setPortfolioCategory(cat.id)}
-                  className={`px-3.5 py-1.5 rounded-full text-[10px] font-mono tracking-wider transition-all duration-300 border ${
-                    portfolioCategory === cat.id 
-                      ? "bg-blue-600 text-white border-blue-600 font-medium shadow-md" 
-                      : "bg-zinc-800 text-zinc-300 border-zinc-700 hover:text-blue-400 hover:border-zinc-600"
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
+        {/* Filter & Search controls */}
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              { id: "All", label: "ALL WORK" },
+              { id: "The Impact", label: "COMMERCIALS" },
+              { id: "The Truth", label: "DOCUMENTARIES" },
+              { id: "The Craft", label: "NARRATIVE" }
+            ].map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setPortfolioCategory(cat.id)}
+                className={`px-4 py-2 rounded-full text-[10px] font-mono tracking-wider transition-all duration-300 border ${
+                  portfolioCategory === cat.id 
+                    ? "bg-blue-600 text-white border-blue-600 font-bold shadow-md" 
+                    : "bg-white text-zinc-650 border-zinc-200 hover:text-blue-600 hover:border-zinc-300"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Search bar */}
+          <div className="relative w-full md:w-80">
+            <input
+              type="text"
+              placeholder="Search by cameras, director, etc..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-5 py-2.5 bg-white border border-zinc-200 rounded-full text-xs font-mono text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition shadow-sm"
+            />
           </div>
         </div>
 
         {/* PORTFOLIO GRID */}
         {filteredPortfolio.length === 0 ? (
-          <div className="py-16 text-center border border-dashed border-zinc-300 rounded-3xl max-w-lg mx-auto space-y-4 bg-white/70">
+          <div className="py-16 text-center border border-dashed border-zinc-300 rounded-[32px] max-w-lg mx-auto space-y-4 bg-white shadow-sm">
             <AlertCircle className="w-8 h-8 text-zinc-400 mx-auto" />
             <h3 className="font-display font-medium text-zinc-800 text-base">No Matching Cinematic Projects</h3>
-            <p className="text-zinc-500 text-xs">Try searching for other active vectors like "Sony Venice", "Anamorphic", "independent", or "premium".</p>
+            <p className="text-zinc-500 text-xs">Try searching for other active vectors like "Sony Venice", "Anamorphic", or "Alexa".</p>
             <button 
               onClick={() => { setSearchQuery(""); setPortfolioCategory("All"); }}
-              className="px-4 py-2 bg-black text-white text-xs font-mono rounded-full hover:bg-neutral-800 transition"
+              className="px-4 py-2 bg-zinc-900 text-white text-xs font-mono rounded-full hover:bg-zinc-800 transition"
             >
               Reset Search & Filter
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-fr">
             <AnimatePresence>
-              {filteredPortfolio.map((item) => (
-                <motion.div
-                  key={item.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.4 }}
-                  onClick={() => setSelectedPortfolioItem(item)}
-                  className="group bg-white border border-zinc-200/80 hover:border-zinc-300 rounded-3xl overflow-hidden transition-all duration-300 cursor-pointer shadow-sm hover:shadow-[0_15px_45px_rgba(0,0,0,0.04)] flex flex-col justify-between"
-                >
-                  <div className="relative aspect-[2.39/1] overflow-hidden bg-black">
-                    <img
-                      src={item.thumbnailUrl}
-                      alt={item.title}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 opacity-90"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-75" />
-                    
-                    {/* Hover Play/Vimeo Indicator Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/40 backdrop-blur-[2px]">
-                      <div className="flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-500 scale-95 group-hover:scale-100 transition-transform duration-300 rounded-full font-mono text-[9px] text-white tracking-widest shadow-lg">
-                        <span>▶ WATCH MASTERPIECE</span>
+              {filteredPortfolio.map((item, idx) => {
+                // Design sequence matching AltitudeCam's beautiful asymmetric layout:
+                const layouts = [
+                  "col-span-1 md:col-span-2 md:row-span-2 min-h-[320px] md:min-h-[460px]", // Index 0: Large
+                  "col-span-1 md:col-span-1 md:row-span-1 min-h-[220px]",                // Index 1: Small
+                  "col-span-1 md:col-span-1 md:row-span-1 min-h-[220px]",                // Index 2: Small
+                  "col-span-1 md:col-span-1 md:row-span-2 min-h-[320px] md:min-h-[460px]", // Index 3: Tall
+                  "col-span-1 md:col-span-1 md:row-span-1 min-h-[220px]",                // Index 4: Small
+                  "col-span-1 md:col-span-1 md:row-span-1 min-h-[220px]",                // Index 5: Small
+                  "col-span-1 md:col-span-2 md:row-span-1 min-h-[220px]",                // Index 6: Wide
+                  "col-span-1 md:col-span-1 md:row-span-1 min-h-[220px]",                // Index 7: Small
+                ];
+                const gridClass = layouts[idx % layouts.length];
+
+                return (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.4 }}
+                    onClick={() => setSelectedPortfolioItem(item)}
+                    className={`relative group rounded-[28px] md:rounded-[32px] overflow-hidden bg-zinc-950 cursor-pointer shadow-md border border-zinc-200/10 hover:shadow-xl transition-all duration-500 ${gridClass}`}
+                  >
+                    {/* Background thumbnail image with custom aspect ratio scaling */}
+                    <div className="absolute inset-0 overflow-hidden bg-black">
+                      <img
+                        src={item.thumbnailUrl}
+                        alt={item.title}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-90"
+                      />
+                      {/* Gradient mask */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                    </div>
+
+                    {/* Content overlay */}
+                    <div className="absolute inset-x-6 bottom-6 flex justify-between items-end z-10">
+                      <div className="pr-12 text-left">
+                        <h3 className="text-lg md:text-xl font-sans font-bold tracking-tight text-white uppercase leading-tight drop-shadow-md">
+                          {item.title.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}
+                        </h3>
+                      </div>
+                      
+                      {/* Blue Play Circle Icon */}
+                      <div className="shrink-0">
+                        <div className="w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-500 scale-95 group-hover:scale-105 group-hover:bg-blue-500 flex items-center justify-center text-white transition-all duration-300 shadow-lg">
+                          <Play size={14} fill="currentColor" className="ml-1 text-white" />
+                        </div>
                       </div>
                     </div>
 
-                    {/* Top Aspect Tag */}
-                    <span className="absolute top-3 right-3 text-[10px] font-mono tracking-widest px-2 py-0.5 bg-black/70 rounded border border-white/10 text-white z-10">
+                    {/* Subtle Aspect Ratio tag at top-right */}
+                    <span className="absolute top-4 right-4 text-[9px] font-mono tracking-widest px-2 py-0.5 bg-black/60 rounded border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       {item.aspectRatio}
                     </span>
-                    
-                    {/* Widescreen cinematic bars simulator */}
-                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-black" />
-                    <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black" />
-                  </div>
-
-                  <div className="p-6 space-y-4">
-                    <div className="space-y-1">
-                      <div className="flex justify-between items-center text-[10px] font-mono text-zinc-400">
-                        <span>CLIENT: {item.client.toUpperCase()}</span>
-                        <span>{item.videoDuration} MIN</span>
-                      </div>
-                      <h3 className="text-xl font-display font-bold text-zinc-900 group-hover:text-blue-600 transition-colors">
-                        {item.title}
-                      </h3>
-                    </div>
-
-                    <p className="text-zinc-500 text-xs line-clamp-2 leading-relaxed">
-                      {item.synopsis}
-                    </p>
-
-                    {/* Metadata tags */}
-                    <div className="flex flex-wrap gap-1.5 pt-2">
-                      <span className="text-[10px] font-mono bg-zinc-50 px-2 py-1 rounded-md text-zinc-650 border border-zinc-200">
-                        🎥 {item.cameraPackage}
-                      </span>
-                      <span className="text-[10px] font-mono bg-blue-50 text-blue-700 px-2 py-1 rounded-md border border-blue-100">
-                        💎 {item.budgetGrade}
-                      </span>
-                      <span className="text-[10px] font-mono bg-zinc-50 text-zinc-700 px-2 py-1 rounded-md border border-zinc-200">
-                        {item.role}
-                      </span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </AnimatePresence>
           </div>
         )}
@@ -459,166 +508,45 @@ export default function App() {
       {/* PORTFOLIO LIGHTBOX MODAL */}
       <AnimatePresence>
         {selectedPortfolioItem && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-md" onClick={() => setSelectedPortfolioItem(null)}>
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-zinc-950 border border-zinc-800 rounded-3xl overflow-hidden max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative max-w-5xl w-full aspect-video rounded-2xl md:rounded-3xl overflow-hidden bg-black shadow-2xl border border-zinc-850"
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative aspect-[2.39/1] bg-black">
-                {selectedPortfolioItem.vimeoVideoId ? (
-                  <iframe
-                    src={`https://player.vimeo.com/video/${selectedPortfolioItem.vimeoVideoId}?autoplay=1&title=0&byline=0&portrait=0`}
-                    className="w-full h-full absolute inset-0 border-0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowFullScreen
-                    title={selectedPortfolioItem.title}
+              {selectedPortfolioItem.vimeoVideoId ? (
+                <iframe
+                  src={`https://player.vimeo.com/video/${selectedPortfolioItem.vimeoVideoId}?autoplay=1&title=0&byline=0&portrait=0`}
+                  className="w-full h-full border-0 absolute inset-0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                  title={selectedPortfolioItem.title}
+                />
+              ) : (
+                <div className="relative w-full h-full">
+                  <img
+                    src={selectedPortfolioItem.thumbnailUrl}
+                    alt={selectedPortfolioItem.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
                   />
-                ) : (
-                  <>
-                    <img
-                      src={selectedPortfolioItem.thumbnailUrl}
-                      alt={selectedPortfolioItem.title}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover opacity-80"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 to-transparent" />
-                  </>
-                )}
-                
-                {/* Widescreen bars */}
-                <div className="absolute top-0 left-0 right-0 h-4 bg-black/60 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 right-0 h-4 bg-black/60 pointer-events-none" />
-
-                {/* Close Button */}
-                <button
-                  onClick={() => setSelectedPortfolioItem(null)}
-                  className="absolute top-6 right-6 h-8 w-8 rounded-full bg-black/80 hover:bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 text-sm transition cursor-pointer z-10"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className="p-6 md:p-8 space-y-6">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                  <div className="space-y-1">
-                    <span className="text-xs font-mono text-zinc-400">{selectedPortfolioItem.category.toUpperCase()} // RELEASE {selectedPortfolioItem.releaseYear}</span>
-                    <h2 className="text-2xl md:text-3xl font-display font-medium text-white">{selectedPortfolioItem.title}</h2>
-                  </div>
-                  <span className="text-xs font-mono tracking-widest px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded">
-                    ROLE: {selectedPortfolioItem.role.toUpperCase()}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-6 border-t border-zinc-900">
-                  {/* Left Column: Storytelling & Impact */}
-                  <div className="lg:col-span-8 space-y-6">
-                    {/* Emotional Project Story */}
-                    {selectedPortfolioItem.projectStory && (
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block">// PROJECT STORY (EMOTIONAL ARC)</span>
-                        </div>
-                        <p className="text-zinc-200 text-sm leading-relaxed font-sans">{selectedPortfolioItem.projectStory}</p>
-                      </div>
-                    )}
-
-                    {/* SGE Optimized Synopsis */}
-                    <div className="space-y-2 pt-2">
-                      <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block">// CORE SUMMARY SYNOPSIS</span>
-                      <p className="text-zinc-400 text-xs leading-relaxed">{selectedPortfolioItem.synopsis}</p>
-                    </div>
-
-                    {/* Result / Business & Emotional Impact */}
-                    {selectedPortfolioItem.resultImpact && (
-                      <div className="p-5 bg-gradient-to-br from-blue-950/20 to-zinc-950/40 border border-blue-950/40 rounded-2xl space-y-2">
-                        <span className="text-[10px] font-mono text-blue-400 uppercase tracking-widest block font-bold">🎯 THE OUTCOME & IMPACT</span>
-                        <p className="text-zinc-200 text-sm leading-relaxed font-sans">{selectedPortfolioItem.resultImpact}</p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Right Column: Collapsible Technical Log & Auto tags */}
-                  <div className="lg:col-span-4 space-y-6">
-                    {/* Collapsible Technical Craft Accordion */}
-                    <div className="border border-zinc-805 border-zinc-800 rounded-2xl overflow-hidden bg-zinc-900/10">
-                      <button
-                        onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
-                        className="w-full p-4 flex justify-between items-center bg-zinc-900/30 hover:bg-zinc-900/50 transition text-left cursor-pointer"
-                      >
-                        <span className="text-xs font-mono text-zinc-300 font-medium uppercase tracking-wide flex items-center gap-1.5">
-                          ⚙️ TECHNICAL CRAFT DETAILS
-                        </span>
-                        <span className="text-xs text-blue-400 font-mono">
-                          {showTechnicalDetails ? "[ HIDE ]" : "[ EXPAND ]"}
-                        </span>
-                      </button>
-
-                      {showTechnicalDetails && (
-                        <motion.div 
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="p-4 border-t border-zinc-800/80 bg-black/60 font-mono text-xs space-y-3"
-                        >
-                          <div className="space-y-1.5 text-zinc-300">
-                            <div className="flex justify-between pb-1 border-b border-zinc-950">
-                              <span className="text-zinc-500">Camera System</span>
-                              <span className="text-right font-medium text-zinc-200">{selectedPortfolioItem.cameraPackage}</span>
-                            </div>
-                            <div className="flex justify-between pb-1 border-b border-zinc-950">
-                              <span className="text-zinc-500">Anamorphic Glasses</span>
-                              <span className="text-right font-medium text-zinc-200">{selectedPortfolioItem.lensesUsed}</span>
-                            </div>
-                            <div className="flex justify-between pb-1 border-b border-zinc-950">
-                              <span className="text-zinc-500">Color Workflow</span>
-                              <span className="text-right font-medium text-blue-400">{selectedPortfolioItem.colorSpace}</span>
-                            </div>
-                            <div className="flex justify-between pb-1 border-b border-zinc-950">
-                              <span className="text-zinc-500">Budget Bracket</span>
-                              <span className="text-right font-medium text-indigo-400">{selectedPortfolioItem.budgetGrade}</span>
-                            </div>
-                            <div className="flex justify-between font-bold">
-                              <span className="text-zinc-500">Aspect Ratio</span>
-                              <span className="text-right font-medium text-zinc-200">{selectedPortfolioItem.aspectRatio}</span>
-                            </div>
-                          </div>
-
-                          {selectedPortfolioItem.technicalCraftDetails && (
-                            <div className="pt-3 border-t border-zinc-850 border-zinc-800 space-y-1">
-                              <span className="text-[10px] text-zinc-500 uppercase tracking-widest block font-bold">Behind-The-Lens Systemics</span>
-                              <p className="text-[11px] text-zinc-400 font-sans leading-relaxed">{selectedPortfolioItem.technicalCraftDetails}</p>
-                            </div>
-                          )}
-                        </motion.div>
-                      )}
-                    </div>
-
-                    {/* Thematic Analysis */}
-                    {selectedPortfolioItem.moodTags && (
-                      <div className="space-y-3 bg-zinc-950 border border-zinc-900 p-4 rounded-2xl">
-                        <div className="flex items-center gap-1.5 justify-between">
-                          <span className="text-[10px] font-mono text-blue-400 uppercase tracking-widest font-bold">✧ THEMATIC MOOD TAGS</span>
-                          <span className="text-[8px] font-mono text-zinc-500">Curated Themes</span>
-                        </div>
-                        <div className="flex flex-wrap gap-1.5">
-                          {selectedPortfolioItem.moodTags.map((tag) => (
-                            <span 
-                              key={tag} 
-                              className="text-[10px] font-mono px-2 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-300 rounded-md hover:bg-blue-500/15 hover:text-blue-200 transition"
-                            >
-                              #{tag}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="text-[9px] text-zinc-500 leading-normal font-sans pt-1">
-                          These curated key visual and emotional themes represent the heart of the project.
-                        </p>
-                      </div>
-                    )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
+                    <h2 className="text-xl md:text-3xl font-sans font-bold text-white uppercase">{selectedPortfolioItem.title}</h2>
                   </div>
                 </div>
-              </div>
+              )}
+
+              {/* Sleek floating Close Button */}
+              <button
+                onClick={() => setSelectedPortfolioItem(null)}
+                className="absolute top-4 right-4 md:top-6 md:right-6 h-10 w-10 rounded-full bg-black/80 hover:bg-zinc-900 border border-zinc-700/80 flex items-center justify-center text-white text-base transition-all duration-300 shadow-md hover:scale-105 cursor-pointer z-10"
+                title="Close"
+              >
+                ✕
+              </button>
             </motion.div>
           </div>
         )}
@@ -632,7 +560,7 @@ export default function App() {
           <div className="lg:col-span-8 lg:col-start-3 space-y-8">
             <div className="space-y-3">
               <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// PREMIUM SERVICE BLUEPRINTS</span>
-              <h2 className="text-4xl font-display font-black text-zinc-900 tracking-tight leading-tight">BENEFITS FOCUSED SERVICES</h2>
+              <h2 className="text-4xl font-display font-black text-zinc-900 tracking-tight leading-tight">What We Do</h2>
               <p className="text-zinc-500 text-sm leading-relaxed font-sans">
                 We deliver structured digital film commissions that ensure high aesthetic impact, stunning technical execution, and robust organic discoverability.
               </p>
@@ -640,20 +568,16 @@ export default function App() {
 
             <div className="space-y-6">
                 <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
-                    <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Commercial Production</h3>
-                    <p className="text-zinc-650 text-xs leading-relaxed font-sans">Premium video content designed to establish brand authority and institutional trust.</p>
+                    <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Creative Development</h3>
+                    <p className="text-zinc-650 text-xs leading-relaxed font-sans">Concepting, storyboards, scripting, casting, creative direction & project management to your specifications. Whether it’s branded content, event coverage or documentary films, we’re with you at every turn.</p>
                 </div>
                 <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
-                    <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Narrative Filmmaking</h3>
-                    <p className="text-zinc-650 text-xs leading-relaxed font-sans">Artful storytelling, from short-form conceptual pieces to independent film development.</p>
+                    <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Creative Production</h3>
+                    <p className="text-zinc-650 text-xs leading-relaxed font-sans">An All-Star creative team purpose-built for your project. Best-in-class Directors, DP’s (standard and aerial drone), Audio Engineers, Lighting Technicians, Photographers, Talent and more (or less) scaled to the creative and budget.</p>
                 </div>
                 <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
-                    <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Documentary & Truth</h3>
-                    <p className="text-zinc-650 text-xs leading-relaxed font-sans">Intimate, authentic documentary framing that captures the heart of community and mission-driven organizations.</p>
-                </div>
-                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
-                    <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Color & Craft</h3>
-                    <p className="text-zinc-650 text-xs leading-relaxed font-sans">High-end post-production services utilizing ACES workflows, custom LUT configurations, and sophisticated color grading to ensure a signature visual aesthetic.</p>
+                    <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Post-Production</h3>
+                    <p className="text-zinc-650 text-xs leading-relaxed font-sans">Editing, color, motion graphics and sound design (music and voiceover) delivered in the formats you need.</p>
                 </div>
             </div>
             
@@ -667,108 +591,48 @@ export default function App() {
 
 
 
-      {/* FAQ */}
-      <section id="faq-section" className="py-24 px-4 max-w-4xl mx-auto space-y-12">
-          <h2 className="text-4xl font-display font-bold tracking-tight text-zinc-900 text-center">FREQUENTLY ASKED QUESTIONS</h2>
-          <div className="space-y-6">
-              <div>
-                  <h3 className="font-bold text-zinc-900">What is your production process?</h3>
-                  <p className="text-zinc-600 text-sm">We follow a collaborative 'Project Builder' approach: Creative Concept &rarr; Pre-Production/Casting &rarr; Principal Photography &rarr; Post-Production &rarr; Client Review &rarr; Final Delivery.</p>
-              </div>
-               <div>
-                  <h3 className="font-bold text-zinc-900">What type of clients do you work with?</h3>
-                  <p className="text-zinc-600 text-sm">We partner with brands, sports franchises, non-profits, and independent artists who value premium cinematic quality.</p>
-              </div>
-               <div>
-                  <h3 className="font-bold text-zinc-900">How do I get a quote?</h3>
-                  <p className="text-zinc-600 text-sm">Use the 'Project Builder' tool on our site to describe your vision, or reach out directly through our contact form.</p>
-              </div>
-          </div>
-      </section>
 
 
-      {/* ABOUT / THE LEAD TEAM & MISSION */}
-      <section id="vision-statement-section" className="py-24 px-4 bg-zinc-50/40 border-t border-zinc-200/80">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
-          <div className="space-y-6">
-            <div className="space-y-3">
-              <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// SITE MISSION STATEMENT & ABOUT US</span>
-              <h2 className="text-4xl font-display font-black text-zinc-900 tracking-tight leading-tight">
-                BRINGING VISION TO LIFE
-              </h2>
-            </div>
-            
-            <p className="text-zinc-650 text-sm leading-relaxed font-sans">
-              To transform ideas into immersive visual experiences that resonate with depth, authenticity, and cinematic excellence. At Hard Rain Productions, we bridge the gap between creative vision and technical precision, delivering storytelling that doesn't just show—it moves, inspires, and endures.
+
+
+
+      {/* TESTIMONIALS SECTION */}
+      <section id="testimonials-section" className="py-24 px-4 bg-zinc-50/40 border-t border-b border-zinc-200/80">
+        <div className="max-w-7xl mx-auto space-y-12">
+          <div className="space-y-3 text-center">
+            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// CLIENT TESTIMONIALS</span>
+            <h2 className="text-4xl font-display font-black text-zinc-900 tracking-tight leading-tight">WORDS FROM OUR COLLABORATORS</h2>
+            <p className="text-zinc-500 text-sm max-w-lg mx-auto font-sans">
+              Discover how our dedication to cinematic excellence and technical precision translates to powerful stories for leading brands and narrative creators.
             </p>
-
-            <div className="pt-6 border-t border-zinc-200">
-               <h3 className="text-xl font-display font-bold mb-2">Scott Bernstein, Founder/Producer</h3>
-               <p className="text-zinc-650 text-sm leading-relaxed font-sans">
-                 Scott Bernstein brings a deep commitment to human-centric filmmaking. With a career rooted in both institutional trust and artistic narrative, Scott leads the studio’s mission to elevate every project through collaborative storytelling and technical precision.
-               </p>
-            </div>
-
-            </div>
-
-          {/* Interactive display image / team mockup rendering */}
-          <div className="relative aspect-[4/3] rounded-3xl overflow-hidden group border border-zinc-200">
-            <img 
-              src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&q=80&w=1200" 
-              alt="team showcase" 
-              referrerPolicy="no-referrer"
-              className="w-full h-full object-cover opacity-80"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#f4f4f6]/40 via-transparent to-transparent" />
-            
-            {/* Absolute quote overlying */}
-            <div className="absolute bottom-8 left-8 right-8 bg-white/95 border border-zinc-200 p-6 rounded-2xl shadow-md space-y-3 backdrop-blur-md">
-              <p className="text-zinc-700 text-xs italic leading-relaxed font-sans">
-                "Our filmmaking approach emphasizes deep emotional connection over raw technical noise, ensuring that every minute committed to film has a soul and a reason to exist."
-              </p>
-              <div className="flex justify-between items-center text-[10px] font-mono text-zinc-500 pt-2 border-t border-zinc-100">
-                <span className="text-zinc-950 font-bold">SCOTT BERNSTEIN</span>
-                <span>CREATIVE DIRECTOR / ARCHITECT</span>
-              </div>
-            </div>
           </div>
 
-        </div>
-      </section>
-
-      <section id="equipment-section" className="py-24 px-4 max-w-7xl mx-auto space-y-12 bg-zinc-900 rounded-3xl mb-12">
-        <div className="max-w-7xl mx-auto space-y-8">
-            <div className="space-y-3">
-              <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// TECHNICAL CAPABILITIES</span>
-              <h2 className="text-4xl font-display font-black text-white tracking-tight leading-tight">OUR EQUIPMENT</h2>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 min-w-full font-mono text-xs pt-2">
-              <div className="p-3 border border-zinc-700 rounded-xl space-y-1 bg-zinc-800 shadow-sm">
-                <span className="text-blue-400 font-bold block text-[10px]">CAMERA</span>
-                <p className="text-zinc-300 text-[10px] leading-relaxed">ARRI Alexa 35, Mini LF, Venice 2, RED V-Raptor.</p>
+          <div className="columns-1 md:columns-2 lg:columns-3 gap-8 [column-fill:_balance] w-full">
+            {TESTIMONIALS_DATA.map((t) => (
+              <div key={t.id} className="break-inside-avoid mb-8 p-8 border border-zinc-200 bg-white rounded-3xl space-y-6 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-lg transition-all duration-300">
+                <div className="space-y-4">
+                  <div className="flex justify-between items-start">
+                    <span className="text-[10px] font-mono text-blue-500 bg-blue-500/10 border border-blue-500/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      {t.category}
+                    </span>
+                    <span className="text-3xl text-zinc-300 font-serif select-none leading-none">“</span>
+                  </div>
+                  <p className="text-zinc-700 text-sm leading-relaxed font-sans italic">
+                    "{t.quote}"
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-zinc-100 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-600 font-mono text-xs font-bold border border-zinc-200 shrink-0">
+                    {t.author.split(' ').map(n => n ? n[0] : '').join('')}
+                  </div>
+                  <div>
+                    <h4 className="font-display font-bold text-zinc-900 text-xs tracking-tight">{t.author}</h4>
+                    <p className="text-[10px] text-zinc-500 font-mono leading-tight mt-0.5">{t.role}, <span className="font-semibold">{t.company}</span></p>
+                  </div>
+                </div>
               </div>
-              <div className="p-3 border border-zinc-700 rounded-xl space-y-1 bg-zinc-800 shadow-sm">
-                <span className="text-blue-400 font-bold block text-[10px]">GLASS</span>
-                <p className="text-zinc-300 text-[10px] leading-relaxed">Cooke Anamorphic/i, Atlas Orion, Leica Summicron-C.</p>
-              </div>
-              <div className="p-3 border border-zinc-700 rounded-xl space-y-1 bg-zinc-800 shadow-sm">
-                <span className="text-blue-400 font-bold block text-[10px]">WORKFLOW</span>
-                <p className="text-zinc-300 text-[10px] leading-relaxed">ACES 1.3 color spaces, unified metadata.</p>
-              </div>
-              <div className="p-3 border border-zinc-700 rounded-xl space-y-1 bg-zinc-800 shadow-sm">
-                <span className="text-blue-400 font-bold block text-[10px]">AERIAL</span>
-                <p className="text-zinc-300 text-[10px] leading-relaxed">High-res drone, stabilized systems.</p>
-              </div>
-              <div className="p-3 border border-zinc-700 rounded-xl space-y-1 bg-zinc-800 shadow-sm">
-                <span className="text-blue-400 font-bold block text-[10px]">CGI</span>
-                <p className="text-zinc-300 text-[10px] leading-relaxed">3D modeling, simulation, compositing.</p>
-              </div>
-              <div className="p-3 border border-zinc-700 rounded-xl space-y-1 bg-zinc-800 shadow-sm">
-                <span className="text-blue-400 font-bold block text-[10px]">STABILIZATION</span>
-                <p className="text-zinc-300 text-[10px] leading-relaxed">Gimbal, crane, dolly movement.</p>
-              </div>
-            </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -828,6 +692,7 @@ export default function App() {
         <div className="flex gap-4">
           <a href="#about-section" className="hover:text-zinc-900">PHILOSOPHY</a>
           <a href="#portfolio-section" className="hover:text-zinc-900">INDEXED WORKS</a>
+          <a href="#testimonials-section" className="hover:text-zinc-900">TESTIMONIALS</a>
           <a href="#client-portal-section" className="hover:text-zinc-900">PORTAL LOGS</a>
         </div>
         <p className="text-[9px] text-zinc-400 mt-4 md:mt-0 max-w-sm text-center md:text-right">
