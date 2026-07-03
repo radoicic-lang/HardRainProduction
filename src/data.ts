@@ -1,4 +1,6 @@
 import { PortfolioItem, ActiveProject, AgentManifest, Testimonial } from "./types";
+import calbankCover from "./assets/images/calbank_cover_sdfc_1781669075922.jpg";
+import biomechanicCover from "./assets/images/biomechanic_flow_cover_1781670049518.jpg";
 
 /**
  * MANUAL VIMEO VIDEO LINKS & DATA
@@ -38,7 +40,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     aspectRatio: "2.39:1",
     videoDuration: "1:45",
     role: "Producer",
-    thumbnailUrl: "/src/assets/images/calbank_cover_sdfc_1781669075922.jpg",
+    thumbnailUrl: calbankCover,
     director: "Marcus Vance",
     cinematographer: "Evelyn Kross",
     budgetGrade: "Tier-1 (Premium)",
@@ -107,7 +109,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     aspectRatio: "16:9",
     videoDuration: "1:15",
     role: "Co-Director / Colorist",
-    thumbnailUrl: "/src/assets/images/biomechanic_flow_cover_1781670049518.jpg",
+    thumbnailUrl: biomechanicCover,
     director: "Marcus Vance",
     cinematographer: "Leo Thorne",
     budgetGrade: "Tier-1 (Premium)",

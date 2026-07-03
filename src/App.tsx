@@ -32,6 +32,8 @@ import { PORTFOLIO_DATA, ACTIVE_PROJECTS_DATA, AGENT_MANIFEST_DATA, TESTIMONIALS
 import { ClientLogoCarousel } from "./components/ClientLogoCarousel";
 import { PortfolioItem, ActiveProject, ReviewComment, Milestone, Testimonial } from "./types";
 import { motion, AnimatePresence } from "motion/react";
+import ScottImg from "./assets/images/Scott.jpg";
+import ScottVid from "./assets/images/Scott.mov";
 
 export default function App() {
   // Navigation & Screen States
@@ -326,7 +328,7 @@ export default function App() {
               >
                 {/* Static Image */}
                 <img 
-                  src="/src/assets/images/Scott.jpg" 
+                  src={ScottImg} 
                   alt="Scott Bernstein" 
                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isScottHovered ? "opacity-0" : "opacity-100"}`}
                   referrerPolicy="no-referrer"
@@ -335,7 +337,7 @@ export default function App() {
                 {/* Hover Video Loop */}
                 <video
                   ref={scottVideoRef}
-                  src="/src/assets/images/Scott.mov"
+                  src={ScottVid}
                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isScottHovered ? "opacity-100" : "opacity-0"}`}
                   loop
                   muted
