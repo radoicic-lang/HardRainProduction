@@ -122,7 +122,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     technicalCraftDetails: "The Alexa 35's unmatched dynamic range allowed us to pull back extreme window highlights while keeping the internal room tones elegantly warm. Custom HUD graphic elements were tracked precisely in post-production using real biomechanical reference points.",
     resultImpact: "The campaign drove unprecedented product launch interest, setting a brand-new standard for commercial kinetic design globally.",
     moodTags: ["Ahead of the Curve", "Kinetic Wellness", "Biomechanical HUD", "Penthouse Sunset Glow", "High-End Training"],
-    vimeoVideoId: "1201987707"
+    vimeoVideoId: "1201960628"
   },
   {
     id: "vimeo-sycuan-health",
@@ -214,7 +214,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     technicalCraftDetails: "Filmed inside busy dispatch bays and distribute zones. We used lightweight standard prime lenses with a native stabilization rig to keep our lens close to the action without disrupting active sorting lines.",
     resultImpact: "The campaign galvanized donation volume, raising over $250k in volunteer funding within a week of release on civic channels.",
     moodTags: ["Feeding San Diego", "Military Support", "Volunteer Hearts", "Documentary Grit", "Hopeful Community"],
-    vimeoVideoId: "1201985181"
+    vimeoVideoId: "1201966304"
   },
   {
     id: "vimeo-gameday-iconic",
@@ -260,7 +260,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     technicalCraftDetails: "We utilized special high-speed zooms combined with the Alexa 35's 17 stops of dynamic range to maintain deep, crisp greens against bright, over-the-ocean morning highlights.",
     resultImpact: "The official PGA broadcast partner showcased this sequence as their primary event opener, driving spectacular viewership ratings.",
     moodTags: ["Farmers Insurance Open", "Torrey Pines Coastal", "Pacific Fog", "Perfect Dawn Silhouettes", "Golf Acoustics"],
-    vimeoVideoId: "1201972095"
+    vimeoVideoId: "1201934684"
   },
   {
     id: "vimeo-gameday-illustrator",
@@ -284,6 +284,29 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     resultImpact: "Lauded by community boards and design guilds; selected as an artistic exhibition feature at the San Diego Modern Museum of Art.",
     moodTags: ["Gameday Illustrator", "Chicano Park Murals", "Aerosol Particles", "Vivid Spray Textures", "Urban Art Legacy"],
     vimeoVideoId: "1201963152"
+  },
+  {
+    id: "vimeo-pacific-horizons",
+    title: "PACIFIC HORIZONS: COASTAL REEL",
+    client: "Coastal Collective",
+    category: "The Impact",
+    aspectRatio: "2.39:1",
+    videoDuration: "1:30",
+    role: "Director / DP",
+    thumbnailUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1200",
+    director: "Scott Bernstein",
+    cinematographer: "Evelyn Kross",
+    budgetGrade: "Tier-1 (Premium)",
+    cameraPackage: "ARRI Alexa Mini LF",
+    lensesUsed: "Cineovision Anamorphics",
+    colorSpace: "Arri Log-C4 (ACES workflow)",
+    releaseYear: "2027",
+    synopsis: "An elegant cinematic exploration of golden horizons, shoreline tides, and standard-setting coastal drone mapping.",
+    projectStory: "This reel was designed to capture the delicate transition of dawn light into full golden daylight on the Pacific coast. By using anamorphic squeeze and custom diffusion, we rendered beautiful sea flares and organic water reflections.",
+    technicalCraftDetails: "Captured in 4.5K Open Gate with heavy anamorphic optical distortion. Sky and mist exposures were balanced using high-speed custom ND filtration packages.",
+    resultImpact: "Acclaimed as a stunning signature piece, reinforcing Hard Rain's mastery of luxury maritime and coastal atmospheres.",
+    moodTags: ["Pacific Horizons", "Golden Dawn", "Anamorphic Flares", "Maritime Air", "Pristine Cinematic"],
+    vimeoVideoId: "1201956407"
   }
 ];
 
@@ -456,11 +479,11 @@ export const TESTIMONIALS_DATA: Testimonial[] = [
   },
   {
     id: "t8",
-    quote: "Working with Hard Rain Productions to produce our spa's promotional video was an outstanding experience from start to finish. Their team’s professionalism and creative vision resulted in stunning visual content that beautifully showcases our services. Their extremely talented team were efficient, patient and a pleasure to work with.",
+    quote: "Working with Hard Rain Productions to produce our spa's branding video was an outstanding experience from start to finish. Their team’s professionalism and creative vision resulted in stunning visual content that beautifully showcases our services. Their extremely talented team were efficient, patient and a pleasure to work with.",
     author: "Nancy King",
     role: "Director",
     company: "Spa Ritual",
-    category: "Promotional"
+    category: "Branding"
   }
 ];
 

@@ -32,7 +32,8 @@ import { PORTFOLIO_DATA, ACTIVE_PROJECTS_DATA, AGENT_MANIFEST_DATA, TESTIMONIALS
 import { ClientLogoCarousel } from "./components/ClientLogoCarousel";
 import { PortfolioItem, ActiveProject, ReviewComment, Milestone, Testimonial } from "./types";
 import { motion, AnimatePresence } from "motion/react";
-import ScottImg from "./assets/images/Scott.jpg";
+import BehindTheScenesImg from "./assets/images/Behind the Scenes.JPG";
+import HRPLogoImg from "./assets/images/HRPlogo.png";
 import ScottVid from "./assets/images/Scott.mov";
 
 export default function App() {
@@ -54,21 +55,6 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedPortfolioItem, setSelectedPortfolioItem] = useState<PortfolioItem | null>(null);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
-
-  // Scott Profile Hover States & Refs
-  const [isScottHovered, setIsScottHovered] = useState(false);
-  const scottVideoRef = useRef<HTMLVideoElement | null>(null);
-
-  useEffect(() => {
-    if (scottVideoRef.current) {
-      if (isScottHovered) {
-        scottVideoRef.current.play().catch(err => console.log("Video play error:", err));
-      } else {
-        scottVideoRef.current.pause();
-        scottVideoRef.current.currentTime = 0;
-      }
-    }
-  }, [isScottHovered]);
 
   // Dynamically fetch Vimeo titles/metadata and update throughout the website
   useEffect(() => {
@@ -204,6 +190,14 @@ export default function App() {
             className="flex items-center gap-3 cursor-pointer"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
+            <img 
+              src={HRPLogoImg} 
+              alt="HRP Logo" 
+              className={`h-8 w-8 rounded-md object-cover border transition-colors duration-300 ${
+                hasScrolled ? "border-zinc-300/60" : "border-zinc-800"
+              }`}
+              referrerPolicy="no-referrer"
+            />
             <div>
               <span className={`font-display font-bold text-base tracking-widest transition-colors duration-300 ${
                 hasScrolled ? "text-zinc-900" : "text-white"
@@ -251,12 +245,49 @@ export default function App() {
         </div>
       </nav>
 
-      {/* HERO SECTION / THE IMMERSIVE "HOOK" */}
-      <header id="hero-heading" className="relative min-h-screen flex flex-col justify-between pt-24 pb-8 px-4 md:px-8 overflow-hidden z-10 border-b border-zinc-900 bg-gradient-to-b from-black via-zinc-950 to-[#070709]">
-        
-        {/* Full-bleed background viewport (Actual Vimeo background video loop for HRP HERO) */}
-        <div className="absolute inset-0 z-0 pointer-events-none transition-all duration-700 overflow-hidden">
-          <div className="absolute inset-0 w-full h-full scale-[1.12]">
+      {/* INTRO LOGO & TEXT BAR (BELOW NAVIGATION, ABOVE HERO VIDEO) */}
+      <section className="relative z-20 w-full bg-black pt-28 pb-16 px-4 md:px-8 border-b border-zinc-900">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          
+          {/* Logo Column */}
+          <div className="lg:col-span-5 flex justify-center lg:justify-start">
+            <div className="w-full max-w-[340px] md:max-w-[380px] aspect-square rounded-3xl overflow-hidden border border-zinc-800/80 shadow-2xl relative group bg-gradient-to-b from-zinc-900 to-black p-1">
+              <img 
+                src={HRPLogoImg} 
+                alt="Hard Rain Productions Logo" 
+                className="w-full h-full object-cover rounded-[20px] transition-transform duration-700 group-hover:scale-105 select-none"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 rounded-[20px] bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            </div>
+          </div>
+
+          {/* Text Column */}
+          <div className="lg:col-span-7 text-left space-y-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black tracking-tight text-white leading-tight">
+              Creating Stories That Connect
+            </h2>
+
+            <div className="space-y-5 text-zinc-350 text-sm sm:text-base leading-relaxed font-sans font-light">
+              <p>
+                Hard Rain Productions is a full-service creative consultancy. We combine strategy, creativity and production expertise to create content that connects with audiences and inspires action.
+              </p>
+              <p>
+                Our mission is to transform ideas into immersive visual experiences that resonate with depth, authenticity and cinematic excellence. Every project begins with three simple questions: <span className="italic font-medium text-white">What is the idea? Why should your audience care? What action do we want them to take?</span> From there, we build compelling visual stories that are crafted with purpose.
+              </p>
+              <p>
+                At Hard Rain Productions, we don't just produce videos. We develop stories that move, inspire and endure.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* HERO CINEMATIC VIDEO PLAYGROUND */}
+      <section id="hero-video" className="relative w-full aspect-video md:h-[70vh] min-h-[400px] max-h-[750px] overflow-hidden bg-black border-b border-zinc-900">
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 w-full h-full scale-[1.05]">
             <iframe
               src="https://player.vimeo.com/video/1202329639?background=1&autoplay=1&loop=1&byline=0&portrait=0&title=0&muted=1&quality=1080p"
               className="absolute top-1/2 left-1/2 w-full h-full -translate-x-1/2 -translate-y-1/2 aspect-[16/9] min-w-full min-h-full object-cover pointer-events-none opacity-100"
@@ -265,40 +296,7 @@ export default function App() {
             />
           </div>
         </div>
-
-        {/* TOP LINE INTRODUCTIONS */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col justify-center items-start mt-12 gap-8">
-          
-
-        {/* Studio Hook (Moved) */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col justify-center items-end mt-[400px] sm:mt-[500px] gap-8">
-           <div className="p-8 bg-zinc-950/20 backdrop-blur-md rounded-3xl border border-zinc-800/80 space-y-6 max-w-2xl text-left shadow-2xl">
-             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-900/50 border border-zinc-800 text-zinc-400 text-[10px] font-mono rounded-full uppercase tracking-[0.2em]">
-                ✧ STORIES THAT CONNECT
-             </div>
-             
-             <h1 className="text-3xl sm:text-4xl font-display font-black tracking-tight text-white leading-tight">
-               Stories That Connect
-             </h1>
-
-             <div className="space-y-4 text-zinc-300 text-sm leading-relaxed font-sans font-light">
-               <p>
-                 Hard Rain Productions is a full-service creative consultancy. We combine strategy, creativity and production expertise to create content that connects with audiences and inspires action.
-               </p>
-               <p>
-                 Our mission is to transform ideas into immersive visual experiences that resonate with depth, authenticity and cinematic excellence. Every project begins with three simple questions: What is the idea? Why should your audience care? What action do we want them to take? From there, we build compelling visual stories that are crafted with purpose.
-               </p>
-               <p>
-                 At Hard Rain Productions, we don't just produce videos. We develop stories that move, inspire and endure.
-               </p>
-             </div>
-
-
-           </div>
-        </div>
-        
-        </div>
-      </header>
+      </section>
 
       <div id="partners-section">
         <ClientLogoCarousel />
@@ -321,50 +319,17 @@ export default function App() {
                 </div>
             </div>
             <div className="flex items-center justify-center md:justify-end w-full max-w-xl">
-              <div 
-                className="relative aspect-video w-full rounded-3xl overflow-hidden bg-black border border-zinc-200/20 shadow-2xl group cursor-pointer"
-                onMouseEnter={() => setIsScottHovered(true)}
-                onMouseLeave={() => setIsScottHovered(false)}
-              >
+              <div className="relative aspect-video w-full rounded-3xl overflow-hidden bg-black border border-zinc-200/20 shadow-2xl group">
                 {/* Static Image */}
                 <img 
-                  src={ScottImg} 
-                  alt="Scott Bernstein" 
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isScottHovered ? "opacity-0" : "opacity-100"}`}
+                  src={BehindTheScenesImg} 
+                  alt="Behind the Scenes" 
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   referrerPolicy="no-referrer"
                 />
 
-                {/* Hover Video Loop */}
-                <video
-                  ref={scottVideoRef}
-                  src={ScottVid}
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isScottHovered ? "opacity-100" : "opacity-0"}`}
-                  loop
-                  muted
-                  playsInline
-                />
-
                 {/* Custom Overlay Grid / Vignette */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-
-                {/* Sleek Cinematic play/pause/hover state badge */}
-                <div className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-black/75 backdrop-blur-md rounded-full border border-zinc-800 pointer-events-none">
-                  {isScottHovered ? (
-                    <>
-                      <div className="flex items-center gap-0.5">
-                        <span className="w-1 h-3 bg-blue-500 rounded-full animate-pulse" />
-                        <span className="w-1 h-4 bg-blue-500 rounded-full animate-pulse delay-75" />
-                        <span className="w-1 h-2 bg-blue-500 rounded-full animate-pulse delay-150" />
-                      </div>
-                      <span className="text-[10px] font-mono font-semibold tracking-wider text-white uppercase">PLAYING REEL</span>
-                    </>
-                  ) : (
-                    <>
-                      <Play size={10} fill="currentColor" className="text-blue-500" />
-                      <span className="text-[10px] font-mono font-semibold tracking-wider text-zinc-300 uppercase">HOVER TO PLAY REEL</span>
-                    </>
-                  )}
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
               </div>
             </div>
         </div>
@@ -562,7 +527,7 @@ export default function App() {
           <div className="lg:col-span-8 lg:col-start-3 space-y-8">
             <div className="space-y-3">
               <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// PREMIUM SERVICE BLUEPRINTS</span>
-              <h2 className="text-4xl font-display font-black text-zinc-900 tracking-tight leading-tight">What We Do</h2>
+              <h2 className="text-4xl font-display font-black text-zinc-900 tracking-tight leading-tight">WHAT WE DO</h2>
               <p className="text-zinc-500 text-sm leading-relaxed font-sans">
                 We deliver structured digital film commissions that ensure high aesthetic impact, stunning technical execution, and robust organic discoverability.
               </p>
@@ -603,7 +568,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="space-y-3 text-center">
             <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest block">// CLIENT TESTIMONIALS</span>
-            <h2 className="text-4xl font-display font-black text-zinc-900 tracking-tight leading-tight">WORDS FROM OUR COLLABORATORS</h2>
+            <h2 className="text-4xl font-display font-black text-zinc-900 tracking-tight leading-tight">BUILDING COLLABORATIVE PARTNERSHIPS</h2>
             <p className="text-zinc-500 text-sm max-w-lg mx-auto font-sans">
               Discover how our dedication to cinematic excellence and technical precision translates to powerful stories for leading brands and narrative creators.
             </p>
@@ -680,7 +645,7 @@ export default function App() {
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 relative overflow-hidden rounded-full border border-zinc-300 bg-zinc-950 shadow-sm shrink-0">
             <img 
-              src="https://i.vimeocdn.com/portrait/122280093_288x288?subrect=0%2C0%2C499%2C499&r=cover&sig=1e999a8ff4532f26453fda4a25ef6cc1975fd035df4523af5f138d6507ef7d00&v=1&region=us" 
+              src={HRPLogoImg} 
               alt="HARD RAIN Logo" 
               referrerPolicy="no-referrer"
               className="h-full w-full object-cover select-none"
