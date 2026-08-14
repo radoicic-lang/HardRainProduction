@@ -20,6 +20,7 @@ import {
   Calendar, 
   DollarSign, 
   ChevronRight, 
+  ChevronDown,
   Zap, 
   AlertCircle,
   FileCheck,
@@ -245,56 +246,45 @@ export default function App() {
         </div>
       </nav>
 
-      {/* INTRO LOGO & TEXT BAR (BELOW NAVIGATION, ABOVE HERO VIDEO) */}
-      <section className="relative z-20 w-full bg-black pt-28 pb-16 px-4 md:px-8 border-b border-zinc-900">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-          
-          {/* Logo Column */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-start">
-            <div className="w-full max-w-[340px] md:max-w-[380px] aspect-square rounded-3xl overflow-hidden border border-zinc-800/80 shadow-2xl relative group bg-gradient-to-b from-zinc-900 to-black p-1">
-              <img 
-                src={HRPLogoImg} 
-                alt="Hard Rain Productions Logo" 
-                className="w-full h-full object-cover rounded-[20px] transition-transform duration-700 group-hover:scale-105 select-none"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 rounded-[20px] bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-            </div>
-          </div>
-
-          {/* Text Column */}
-          <div className="lg:col-span-7 text-left space-y-6">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black tracking-tight text-white leading-tight">
-              Creating Stories That Connect
-            </h2>
-
-            <div className="space-y-5 text-zinc-350 text-sm sm:text-base leading-relaxed font-sans font-light">
-              <p>
-                Hard Rain Productions is a full-service creative consultancy. We combine strategy, creativity and production expertise to create content that connects with audiences and inspires action.
-              </p>
-              <p>
-                Our mission is to transform ideas into immersive visual experiences that resonate with depth, authenticity and cinematic excellence. Every project begins with three simple questions: <span className="italic font-medium text-white">What is the idea? Why should your audience care? What action do we want them to take?</span> From there, we build compelling visual stories that are crafted with purpose.
-              </p>
-              <p>
-                At Hard Rain Productions, we don't just produce videos. We develop stories that move, inspire and endure.
-              </p>
-            </div>
-          </div>
-
+      {/* FULL-SCREEN CINEMATIC HERO WITH BACKGROUND VIDEO */}
+      <section id="hero-video" className="relative w-full h-screen min-h-[600px] overflow-hidden bg-black flex flex-col justify-end items-center pb-24 sm:pb-28 md:pb-32 border-b border-zinc-900">
+        {/* Full-Screen Video Background */}
+        <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden select-none">
+          <iframe
+            src="https://player.vimeo.com/video/1202329639?background=1&autoplay=1&loop=1&byline=0&portrait=0&title=0&muted=1&quality=1080p"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] object-cover pointer-events-none opacity-85 scale-[1.03]"
+            allow="autoplay; fullscreen"
+            title="Hard Rain Background Reel"
+          />
         </div>
-      </section>
 
-      {/* HERO CINEMATIC VIDEO PLAYGROUND */}
-      <section id="hero-video" className="relative w-full aspect-video md:h-[70vh] min-h-[400px] max-h-[750px] overflow-hidden bg-black border-b border-zinc-900">
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute inset-0 w-full h-full scale-[1.05]">
-            <iframe
-              src="https://player.vimeo.com/video/1202329639?background=1&autoplay=1&loop=1&byline=0&portrait=0&title=0&muted=1&quality=1080p"
-              className="absolute top-1/2 left-1/2 w-full h-full -translate-x-1/2 -translate-y-1/2 aspect-[16/9] min-w-full min-h-full object-cover pointer-events-none opacity-100"
-              allow="autoplay; fullscreen"
-              title="HRP HERO"
-            />
-          </div>
+        {/* Ambient Dark Gradients & Cinematic Vignette */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/80 pointer-events-none" />
+
+        {/* Lower Right Third Overlay Content with 50% More Transparent Glass Box */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 md:px-14 lg:px-20 flex justify-center md:justify-end">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+            className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-4.5 rounded-2xl md:rounded-3xl bg-black/20 backdrop-blur-md md:backdrop-blur-lg border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.35)] flex items-center justify-center text-right"
+          >
+            <h1 
+              style={{ fontFamily: "'Brittany Signature', 'Brittany', cursive" }}
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] text-white font-normal leading-normal tracking-wide drop-shadow-[0_2px_16px_rgba(0,0,0,0.9)] select-none px-1 py-0.5"
+            >
+              Creating Stories That Connect
+            </h1>
+          </motion.div>
+        </div>
+
+        {/* Scroll down indicator */}
+        <div 
+          onClick={() => document.getElementById("partners-section")?.scrollIntoView({ behavior: "smooth" })}
+          className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 cursor-pointer opacity-70 hover:opacity-100 transition-opacity select-none group"
+        >
+          <span className="text-[9px] font-mono tracking-widest text-zinc-300 uppercase group-hover:text-white transition-colors">EXPLORE</span>
+          <ChevronDown size={16} className="text-white animate-bounce" />
         </div>
       </section>
 
@@ -304,8 +294,8 @@ export default function App() {
 
       {/* ABOUT US & TEAM */}
       <section id="about-section" className="py-24 px-4 max-w-7xl mx-auto space-y-12">
-        <div id="vision-section" className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="bg-white p-8 sm:p-10 rounded-3xl border border-zinc-200 shadow-sm space-y-4">
+        <div id="vision-section" className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-stretch">
+            <div className="bg-white p-8 sm:p-10 rounded-3xl border border-zinc-200 shadow-sm space-y-4 flex flex-col justify-center">
                 <h3 className="text-xl sm:text-2xl font-display font-bold leading-tight text-zinc-900">
                   Scott Bernstein, <span className="text-zinc-500 font-medium text-lg block sm:inline">President / Creative Director / Emmy-Award-Winning Producer</span>
                 </h3>
@@ -318,19 +308,21 @@ export default function App() {
                   </p>
                 </div>
             </div>
-            <div className="flex items-center justify-center md:justify-end w-full max-w-xl">
-              <div className="relative aspect-video w-full rounded-3xl overflow-hidden bg-black border border-zinc-200/20 shadow-2xl group">
-                {/* Static Image */}
-                <img 
-                  src={BehindTheScenesImg} 
-                  alt="Behind the Scenes" 
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  referrerPolicy="no-referrer"
-                />
-
-                {/* Custom Overlay Grid / Vignette */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-              </div>
+            <div className="bg-white p-8 sm:p-10 rounded-3xl border border-zinc-200 shadow-sm space-y-4 flex flex-col justify-center">
+                <h3 className="text-xl sm:text-2xl font-display font-bold leading-tight text-zinc-900">
+                  Hard Rain Productions <span className="text-zinc-500 font-medium text-lg block sm:inline">Creative Consultancy</span>
+                </h3>
+                <div className="text-zinc-650 font-sans text-sm sm:text-base leading-relaxed space-y-4">
+                  <p>
+                    Hard Rain Productions is a full-service creative consultancy. We combine strategy, creativity and production expertise to create content that connects with audiences and inspires action.
+                  </p>
+                  <p>
+                    Our mission is to transform ideas into immersive visual experiences that resonate with depth, authenticity and cinematic excellence. Every project begins with three simple questions: What is the idea? Why should your audience care? What action do we want them to take? From there, we build compelling visual stories that are crafted with purpose.
+                  </p>
+                  <p>
+                    At Hard Rain Productions, we don't just produce videos. We develop stories that move, inspire and endure.
+                  </p>
+                </div>
             </div>
         </div>
       </section>
@@ -520,8 +512,18 @@ export default function App() {
       </AnimatePresence>
 
       {/* SERVICES & THE INTERACTIVE SCOPE BUILDER / GENERATIVE BRIEFER */}
-      <section id="services-section" className="py-24 px-4 bg-white border-t border-b border-zinc-200/60 shadow-[inset_0_4px_30px_rgba(0,0,0,0.01)]">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <section id="services-section" className="relative py-24 px-4 bg-white border-t border-b border-zinc-200/60 shadow-[inset_0_4px_30px_rgba(0,0,0,0.01)] overflow-hidden">
+        {/* Ghosted Hard Rain Productions Logo Background (20% Opacity) */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden">
+          <img
+            src={HRPLogoImg}
+            alt="Hard Rain Productions Watermark"
+            referrerPolicy="no-referrer"
+            className="w-[500px] sm:w-[650px] md:w-[800px] lg:w-[950px] max-w-none opacity-20 object-contain grayscale-[20%] transition-opacity"
+          />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
           
           {/* Outlined outcome services */}
           <div className="lg:col-span-8 lg:col-start-3 space-y-8">
@@ -534,24 +536,19 @@ export default function App() {
             </div>
 
             <div className="space-y-6">
-                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
+                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-white/70 backdrop-blur-xs sm:backdrop-blur-sm rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
                     <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Creative Development</h3>
                     <p className="text-zinc-650 text-xs leading-relaxed font-sans">Concepting, storyboards, scripting, casting, creative direction & project management to your specifications. Whether it’s branded content, event coverage or documentary films, we’re with you at every turn.</p>
                 </div>
-                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
+                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-white/70 backdrop-blur-xs sm:backdrop-blur-sm rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
                     <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Creative Production</h3>
                     <p className="text-zinc-650 text-xs leading-relaxed font-sans">An All-Star creative team purpose-built for your project. Best-in-class Directors, DP’s (standard and aerial drone), Audio Engineers, Lighting Technicians, Photographers, Talent and more (or less) scaled to the creative and budget.</p>
                 </div>
-                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
+                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-white/70 backdrop-blur-xs sm:backdrop-blur-sm rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
                     <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Post-Production</h3>
                     <p className="text-zinc-650 text-xs leading-relaxed font-sans">Editing, color, motion graphics and sound design (music and voiceover) delivered in the formats you need.</p>
                 </div>
             </div>
-            
-
-            
-            
-            
           </div>
         </div>
       </section>
