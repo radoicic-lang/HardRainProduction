@@ -332,7 +332,15 @@ export default function App() {
       <section id="portfolio-section" className="py-24 px-4 md:px-8 max-w-7xl mx-auto space-y-12 mb-12 bg-transparent">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-zinc-200 pb-8">
           <div className="space-y-3">
-            <h2 className="text-5xl md:text-7xl font-sans font-black tracking-tight text-zinc-950 uppercase leading-none">THE PORTFOLIO</h2>
+            <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
+              <h2 className="text-5xl md:text-7xl font-sans font-black tracking-tight text-zinc-950 uppercase leading-none">THE PORTFOLIO</h2>
+              <img 
+                src={HRPLogoImg} 
+                alt="Hard Rain Productions" 
+                className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain shrink-0" 
+                referrerPolicy="no-referrer"
+              />
+            </div>
             <p className="text-zinc-500 text-sm md:text-base max-w-xl font-sans">A curated selection of national missions, from cinematic masterpieces to critical infrastructure surveys.</p>
           </div>
 
@@ -512,18 +520,8 @@ export default function App() {
       </AnimatePresence>
 
       {/* SERVICES & THE INTERACTIVE SCOPE BUILDER / GENERATIVE BRIEFER */}
-      <section id="services-section" className="relative py-24 px-4 bg-white border-t border-b border-zinc-200/60 shadow-[inset_0_4px_30px_rgba(0,0,0,0.01)] overflow-hidden">
-        {/* Ghosted Hard Rain Productions Logo Background (20% Opacity) */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden">
-          <img
-            src={HRPLogoImg}
-            alt="Hard Rain Productions Watermark"
-            referrerPolicy="no-referrer"
-            className="w-[500px] sm:w-[650px] md:w-[800px] lg:w-[950px] max-w-none opacity-20 object-contain grayscale-[20%] transition-opacity"
-          />
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <section id="services-section" className="py-24 px-4 bg-white border-t border-b border-zinc-200/60 shadow-[inset_0_4px_30px_rgba(0,0,0,0.01)]">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
           
           {/* Outlined outcome services */}
           <div className="lg:col-span-8 lg:col-start-3 space-y-8">
@@ -536,15 +534,15 @@ export default function App() {
             </div>
 
             <div className="space-y-6">
-                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-white/70 backdrop-blur-xs sm:backdrop-blur-sm rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
+                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
                     <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Creative Development</h3>
                     <p className="text-zinc-650 text-xs leading-relaxed font-sans">Concepting, storyboards, scripting, casting, creative direction & project management to your specifications. Whether it’s branded content, event coverage or documentary films, we’re with you at every turn.</p>
                 </div>
-                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-white/70 backdrop-blur-xs sm:backdrop-blur-sm rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
+                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
                     <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Creative Production</h3>
                     <p className="text-zinc-650 text-xs leading-relaxed font-sans">An All-Star creative team purpose-built for your project. Best-in-class Directors, DP’s (standard and aerial drone), Audio Engineers, Lighting Technicians, Photographers, Talent and more (or less) scaled to the creative and budget.</p>
                 </div>
-                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-white/70 backdrop-blur-xs sm:backdrop-blur-sm rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
+                <div className="p-6 border border-zinc-200/85 hover:border-zinc-300 bg-zinc-50/50 rounded-2xl space-y-3 transition shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-md">
                     <h3 className="font-display font-medium text-zinc-900 text-base md:text-lg">Post-Production</h3>
                     <p className="text-zinc-650 text-xs leading-relaxed font-sans">Editing, color, motion graphics and sound design (music and voiceover) delivered in the formats you need.</p>
                 </div>
